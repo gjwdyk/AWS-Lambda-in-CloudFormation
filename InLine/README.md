@@ -141,7 +141,37 @@ A few notes here :
 - [ ] Ensure that the `responseData` is initiated (type declaration), as per example : `"var responseData = {};",`. Missing the type declaration will cause any value assignment to the variable to throw error.
 - [ ] When CloudFormation is deleted, there will be a call to the Lambda Function, for the Lambda Function to properly close resources / finish its process / terminate resources. This is catched with : `"if (event.RequestType == 'Delete') {",` .
 - [ ] You can send response without `responseData`, as example : `"//response.send(event, context, response.SUCCESS);",` .
+- [ ] You can use constant `response.SUCCESS` or `response.FAILED` to indicate the success or failure of the Lambda Function; alternatively you can send string `\"SUCCESS\"` or `\"FAILED\"` instead. Example : `"//var responseStatus = \"SUCCESS\";",` and then followed by `"response.send(event, context, responseStatus, responseData);",` .
 - [ ] After a proper initiation of `responseData`, you can assign multiple "Key:Value" properties to `responseData` variable, which you can pick up at the CloudFormation template/stack. Examples : `"responseData[\"SystemInput\"] = event.ResourceProperties.SystemInput;",`, `"responseData[\"UserInput\"] = event.ResourceProperties.UserInput;",`, `"responseData[\"Reason\"] = \"Called to Generate Random Word\";",`, `"responseData[\"Result\"] = \"Result Word\";",` .
+
+
+
+### Obtaining Results / Outputs
+
+```
+    "LambdaFunction": {
+      "Value": { "Ref": "RandomWordFunction" },
+      "Description": "Look at \"CloudWatch > Log Groups > /aws/lambda/[this-value-reference]\" for the logs of this Lambda Function"
+    },
+    "SystemInput": {
+      "Value": { "Fn::GetAtt": [ "RandomWordInterface", "SystemInput" ] },
+      "Description": "One of the inputs into the Lambda Function (labelled as \"SystemInput\", value is AWS Region)"
+    },
+    "UserInput": {
+      "Value": { "Fn::GetAtt": [ "RandomWordInterface", "UserInput" ] },
+      "Description": "One of the inputs into the Lambda Function (labelled as \"UserInput\")"
+    },
+    "Reason": {
+      "Value": { "Fn::GetAtt": [ "RandomWordInterface", "Reason" ] },
+      "Description": "One of the results of the Lambda Function (labelled as \"Reason\")"
+    },
+    "Result": {
+      "Value": { "Fn::GetAtt": [ "RandomWordInterface", "Result" ] },
+      "Description": "The other result of the Lambda Function (labelled as \"Result\")"
+    }
+```
+
+
 
 
 
