@@ -185,21 +185,11 @@ To obtain the results / outputs of the Lambda Function, use `Fn::GetAtt` on the 
 ### Visuals
 
 Below are some visuals to help picking up the understanding faster.
-
-
+We run the example [LambdaSkeletonCF.json](LambdaSkeletonCF.json) on AWS Region `ap-southeast-1`, and give the CloudFormation's Stack Name `ByLambSkeletCF`, and parameter `UserInput` : `Just a User's Input Text` .
 
 #### CloudFormation Outputs
 
 ![CloudFormation Outputs](CloudFormationOutputs.png)
-
-
-
-`ByLambSkeletCF`
-
-
-
-
-
 
 | Key | Value | Description | Export name |
 | --- | --- | --- | --- |
@@ -208,6 +198,9 @@ Below are some visuals to help picking up the understanding faster.
 |Result|Result Word|The other result of the Lambda Function (labelled as "Result")|-|
 |SystemInput|ap-southeast-1|One of the inputs into the Lambda Function (labelled as "SystemInput", value is AWS Region)|-|
 |UserInput|Just a User's Input Text|One of the inputs into the Lambda Function (labelled as "UserInput")|-|
+
+Note the value of `LambdaFunction` output, and go to `CloudWatch` > `Log Groups` > `/aws/lambda/ByLambSkeletCF-RandomWordFunction-8lN99BdtUMKK` and click on one fo the event on the list.
+
 
 
 ![CloudWatch's Log Groups](CloudWatchLogGroups.png)
