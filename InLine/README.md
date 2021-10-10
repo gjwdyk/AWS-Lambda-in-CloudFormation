@@ -8,20 +8,9 @@ Let's review the components of the CloudFormation and Lambda in [LambdaSkeletonC
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 ### Lambda Execution Role
 
-For Blah Blah Blah.
+Minimum Policy Role for the LambdaFunction is to log it's own process to CloudWatch. This may be useful when doing tracing or troubleshooting.
 
 ```
     "LambdaExecutionRole": {
@@ -65,6 +54,90 @@ For Blah Blah Blah.
       }
     },
 ```
+
+
+
+### Custom Resource
+
+Custom Resource in this specific case is acting as something like the glue or mediator between the CloudFormation and Lambda.
+
+```
+    "RandomWordInterface": {
+      "Type": "Custom::RandomWordInterface",
+      "Properties": {
+        "ServiceToken": { "Fn::GetAtt" : ["RandomWordFunction", "Arn"] },
+        "SystemInput": { "Ref": "AWS::Region" },
+        "UserInput": { "Ref": "UserInput" }
+      }
+    },
+```
+
+Inputs from CloudFormation can be passed to Lambda through the Custom Resource, example from the excerpt above are `"SystemInput": { "Ref": "AWS::Region" },` and `"UserInput": { "Ref": "UserInput" }` .
+In the case where no input to the Lambda is needed, the Custom Resource is still needed, example :
+
+```
+    "RandomWordInterface": {
+      "Type": "Custom::RandomWordInterface",
+      "Properties": {
+        "ServiceToken": { "Fn::GetAtt" : ["RandomWordFunction", "Arn"] }
+      }
+    },
+```
+
+In some documentations, this Custom Resource also represent what is stated as `Pre Signed S3 URL`, which is useful to pass information / outputs / results from the Lambda Function to CloudFormation.
+
+
+
+### Lambda Function (InLine)
+
+Custom Resource in this specific case is acting as something like the glue or mediator between the CloudFormation and Lambda.
+
+```
+    "RandomWordFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "ZipFile": {
+            "Fn::Join": [
+              "\n",
+              [
+                "var response = require('cfn-response');",
+                "exports.handler = function(event, context) {",
+                "  var responseData = {};",
+                "  if (event.RequestType == 'Delete') {",
+                "    //response.send(event, context, response.SUCCESS);",
+                "    responseData[\"Reason\"] = \"CloudFormation Delete Request\";",
+                "    response.send(event, context, response.SUCCESS, responseData);",
+                "    return;",
+                "  }",
+                "  //var responseStatus = \"SUCCESS\";",
+                "  responseData[\"SystemInput\"] = event.ResourceProperties.SystemInput;",
+                "  responseData[\"UserInput\"] = event.ResourceProperties.UserInput;",
+                "  responseData[\"Reason\"] = \"Called to Generate Random Word\";",
+                "  responseData[\"Result\"] = \"Result Word\";",
+                "  response.send(event, context, response.SUCCESS, responseData);",
+                "};"
+              ]
+            ]
+          }
+        },
+        "Handler": "index.handler",
+        "Runtime": "nodejs14.x",
+        "Timeout": "30",
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaExecutionRole",
+            "Arn"
+          ]
+        }
+      }
+    }
+  },
+```
+
+
+
+
 
 
 ![CloudFormation Outputs](CloudFormationOutputs.png)
