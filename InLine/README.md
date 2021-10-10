@@ -171,7 +171,14 @@ A few notes here :
     }
 ```
 
+To obtain the results / outputs of the Lambda Function, use `Fn::GetAtt` on the Custom Resource, stating the Key of the `responseData` .
 
+|Data Submitted at Lambda Function|Data Extracted at CloudFormation|
+| --- | --- |
+|`"responseData[\"SystemInput\"] = event.ResourceProperties.SystemInput;",`|`{ "Fn::GetAtt": [ "RandomWordInterface", "SystemInput" ] }`|
+|`"responseData[\"UserInput\"] = event.ResourceProperties.UserInput;",`|`{ "Fn::GetAtt": [ "RandomWordInterface", "UserInput" ] }`|
+|`"responseData[\"Reason\"] = \"Called to Generate Random Word\";",`|`{ "Fn::GetAtt": [ "RandomWordInterface", "Reason" ] }`|
+|`"responseData[\"Result\"] = \"Result Word\";",`|`{ "Fn::GetAtt": [ "RandomWordInterface", "Result" ] }`|
 
 
 
