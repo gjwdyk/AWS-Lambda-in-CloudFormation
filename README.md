@@ -15,6 +15,8 @@ This Repository covers only the Skeleton of how to :
 - [ ] Transfer information/output from Lambda to CloudFormation,
 - [ ] Glue both CloudFormation and Lambda together
 
+<br>
+
 Other more advanced aspects of Lambda are not covered.
 
 
