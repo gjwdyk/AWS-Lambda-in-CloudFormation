@@ -136,7 +136,7 @@ In some documentations, this Custom Resource also represent what is stated as `P
 The `Code` section describes how to write in-line Lambda code (example is using NodeJS) into CloudFormation Template.
 
 A few notes here :
-- [ ] `"var response = require('cfn-response');",` is needed for logging as well as passing through the results / outputs back to CloudFormation stack. This "import" of `cfn-response` module line is applicable only for in-line Lambda codes. When the Lambda code is located at a S3 bucket, you need to write your own function / module to handle the same. References : [cfn-response module at GitHub](https://github.com/awsdocs/aws-cloudformation-user-guide/blob/main/doc_source/cfn-lambda-function-code-cfnresponsemodule.md) , [cfn-response module at AWS CloudFormation Documentation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-lambda-function-code-cfnresponsemodule.html) .
+- [ ] `"var response = require('cfn-response');",` is needed for logging as well as passing through the results / outputs back to CloudFormation stack. This "import" of `cfn-response` module line is applicable only for in-line Lambda codes. When the Lambda code is located at a S3 bucket, you need to write your own function / module to handle the same. References : [`cfn-response` module at GitHub](https://github.com/awsdocs/aws-cloudformation-user-guide/blob/main/doc_source/cfn-lambda-function-code-cfnresponsemodule.md) , [`cfn-response` module at AWS CloudFormation Documentation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-lambda-function-code-cfnresponsemodule.html) .
 - [ ] `"exports.handler = function(event, context) {",`
 
 
