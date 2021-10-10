@@ -142,7 +142,11 @@ A few notes here :
 - [ ] When CloudFormation is deleted, there will be a call to the Lambda Function, for the Lambda Function to properly close resources / finish its process / terminate resources. This is catched with : `"if (event.RequestType == 'Delete') {",` .
 - [ ] You can send response without `responseData`, as example : `"//response.send(event, context, response.SUCCESS);",` .
 - [ ] You can use constant `response.SUCCESS` or `response.FAILED` to indicate the success or failure of the Lambda Function; alternatively you can send string `\"SUCCESS\"` or `\"FAILED\"` instead. Example : `"//var responseStatus = \"SUCCESS\";",` and then followed by `"response.send(event, context, responseStatus, responseData);",` .
-- [ ] After a proper initiation of `responseData`, you can assign multiple "Key:Value" properties to `responseData` variable, which you can pick up at the CloudFormation template/stack. Examples : `"responseData[\"SystemInput\"] = event.ResourceProperties.SystemInput;",`, `"responseData[\"UserInput\"] = event.ResourceProperties.UserInput;",`, `"responseData[\"Reason\"] = \"Called to Generate Random Word\";",`, `"responseData[\"Result\"] = \"Result Word\";",` .
+- [ ] After a proper initiation of `responseData`, you can assign multiple "Key:Value" properties to `responseData` variable, which you can pick up at the CloudFormation template/stack. Examples :
+ - [ ] `"responseData[\"SystemInput\"] = event.ResourceProperties.SystemInput;",`,
+ - [ ] `"responseData[\"UserInput\"] = event.ResourceProperties.UserInput;",`,
+ - [ ] `"responseData[\"Reason\"] = \"Called to Generate Random Word\";",`,
+ - [ ] `"responseData[\"Result\"] = \"Result Word\";",` .
 
 
 
