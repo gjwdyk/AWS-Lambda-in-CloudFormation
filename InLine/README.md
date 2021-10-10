@@ -135,34 +135,6 @@ In some documentations, this Custom Resource also represent what is stated as `P
 
 The `Code` section describes how to write in-line Lambda code (example is using NodeJS) into CloudFormation Template.
 
-```
-        "Code": {
-          "ZipFile": {
-            "Fn::Join": [
-              "\n",
-              [
-                "var response = require('cfn-response');",
-                "exports.handler = function(event, context) {",
-                "  var responseData = {};",
-                "  if (event.RequestType == 'Delete') {",
-                "    //response.send(event, context, response.SUCCESS);",
-                "    responseData[\"Reason\"] = \"CloudFormation Delete Request\";",
-                "    response.send(event, context, response.SUCCESS, responseData);",
-                "    return;",
-                "  }",
-                "  //var responseStatus = \"SUCCESS\";",
-                "  responseData[\"SystemInput\"] = event.ResourceProperties.SystemInput;",
-                "  responseData[\"UserInput\"] = event.ResourceProperties.UserInput;",
-                "  responseData[\"Reason\"] = \"Called to Generate Random Word\";",
-                "  responseData[\"Result\"] = \"Result Word\";",
-                "  response.send(event, context, response.SUCCESS, responseData);",
-                "};"
-              ]
-            ]
-          }
-        },
-```
-
 A few notes here :
 - [ ] `"var response = require('cfn-response');",` is needed for logging as well as passing through the results / outputs back to CloudFormation stack. This "import" of `cfn-response` module line is applicable only for in-line Lambda codes. When the Lambda code is located at a S3 bucket, you need to write your own function / module to handle the same. References : [cfn-response module at GitHub](https://github.com/awsdocs/aws-cloudformation-user-guide/blob/main/doc_source/cfn-lambda-function-code-cfnresponsemodule.md) , [cfn-response module at AWS CloudFormation Documentation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-lambda-function-code-cfnresponsemodule.html) .
 - [ ] `"exports.handler = function(event, context) {",`
