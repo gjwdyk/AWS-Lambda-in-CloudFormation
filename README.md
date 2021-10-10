@@ -13,7 +13,7 @@ There are at least two ways to incorporate Lambda Function into CloudFormation T
 This Repository covers only the Skeleton of how to :
 - [ ] Transfer information/input from CloudFormation to Lambda,
 - [ ] Transfer information/output from Lambda to CloudFormation,
-- [ ] Glue both CloudFormation and Lambda together
+- [ ] Glue both CloudFormation and Lambda together.
 
 <br>
 
