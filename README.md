@@ -2,20 +2,20 @@
 
 This Repository is only a collection of some notes of a learning journey on how to do AWS Lambda Function from within AWS CloudFormation Stack/Template.
 
-
+<br>
 
 There are at least two ways to incorporate Lambda Function into CloudFormation Template :
 - [ ] [InLine](InLine/)
 - [ ] Lambda source code located in AWS S3 Bucket (not discussed at the moment)
 
-
+<br>
 
 This Repository covers only the Skeleton of how to :
 - [ ] Transfer information/input from CloudFormation to Lambda,
 - [ ] Transfer information/output from Lambda to CloudFormation,
 - [ ] Glue both CloudFormation and Lambda together
 
-Other more advanced aspects of Lambda most probably won't be covered.
+Other more advanced aspects of Lambda are not covered.
 
 
 
