@@ -182,9 +182,17 @@ To obtain the results / outputs of the Lambda Function, use `Fn::GetAtt` on the 
 
 
 
+### Visuals
 
+Below are some visuals to help picking up the understanding faster.
+
+
+
+#### CloudFormation Outputs
 
 ![CloudFormation Outputs](CloudFormationOutputs.png)
+
+
 
 `ByLambSkeletCF`
 
