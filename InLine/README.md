@@ -75,7 +75,7 @@ For Blah Blah Blah.
 
 
 
-| --- | --- | --- | --- |
+
 | Key | Value | Description | Export name |
 | --- | --- | --- | --- |
 |LambdaFunction|ByLambSkeletCF-RandomWordFunction-8lN99BdtUMKK|Look at "CloudWatch > Log Groups > /aws/lambda/[this-value-reference]" for the logs of this Lambda Function|-|
@@ -83,7 +83,7 @@ For Blah Blah Blah.
 |Result|Result Word|The other result of the Lambda Function (labelled as "Result")|-|
 |SystemInput|ap-southeast-1|One of the inputs into the Lambda Function (labelled as "SystemInput", value is AWS Region)|-|
 |UserInput|Just a User's Input Text|One of the inputs into the Lambda Function (labelled as "UserInput")|-|
-| --- | --- | --- | --- |
+
 
 ![CloudWatch's Log Groups](CloudWatchLogGroups.png)
 
