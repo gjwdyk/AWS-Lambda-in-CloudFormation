@@ -187,8 +187,6 @@ To obtain the results / outputs of the Lambda Function, use `Fn::GetAtt` on the 
 Below are some visuals to help picking up the understanding faster.
 We run the example [LambdaSkeletonCF.json](LambdaSkeletonCF.json) on AWS Region `ap-southeast-1`, and give the CloudFormation's Stack Name `ByLambSkeletCF`, and parameter `UserInput` : `Just a User's Input Text` .
 
-#### CloudFormation Outputs
-
 ![CloudFormation Outputs](CloudFormationOutputs.png)
 
 | Key | Value | Description | Export name |
@@ -199,12 +197,12 @@ We run the example [LambdaSkeletonCF.json](LambdaSkeletonCF.json) on AWS Region 
 |SystemInput|ap-southeast-1|One of the inputs into the Lambda Function (labelled as "SystemInput", value is AWS Region)|-|
 |UserInput|Just a User's Input Text|One of the inputs into the Lambda Function (labelled as "UserInput")|-|
 
-Note the value of `LambdaFunction` output, and go to `CloudWatch` > `Log Groups` > `/aws/lambda/ByLambSkeletCF-RandomWordFunction-8lN99BdtUMKK` and click on one fo the event on the list.
-
-
+Note the value of `LambdaFunction` output, and go to `CloudWatch` > `Log Groups` > `/aws/lambda/ByLambSkeletCF-RandomWordFunction-8lN99BdtUMKK` and click on one of the events on the list.
 
 ![CloudWatch's Log Groups](CloudWatchLogGroups.png)
 
+You can view further in more details by expanding each log item, expecially one with a `Response Body` .
+Below is a log containing the response from Lambda Function back to CloudFormation.
 
 ![CloudWatch Log on CloudFormation's Call to the Lambda Function](CloudWatchLogCloudFormationCall.png)
 
@@ -226,6 +224,9 @@ Note the value of `LambdaFunction` output, and go to `CloudWatch` > `Log Groups`
 }
 ```
 
+You can review the structure of the `responseData` (i.e. the `Data` section of the response).
+
+Below is a log containing the response from Lambda Function back to CloudFormation, when the CloudFormation is Deleted.
 
 ![CloudWatch Log up on CloudFormation's Deletion](CloudWatchLogCloudFormationDelete.png)
 
@@ -243,16 +244,6 @@ Note the value of `LambdaFunction` output, and go to `CloudWatch` > `Log Groups`
     }
 }
 ```
-
-
-
-
-
-
-
-
-
-
 
 
 
