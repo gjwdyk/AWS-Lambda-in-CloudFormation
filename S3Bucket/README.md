@@ -301,7 +301,7 @@ Note the value of `LambdaFunction` output, and go to `CloudWatch` > `Log Groups`
 
 ![CloudWatch LogGroups CloudFormation Create](CloudWatchLogGroupsCreateCleaned.png)
 
-Blah Blah Blah.
+We can review the logs in further detail, to understand what information and the structure of the information being passed from CloudFormation Stack to Lambda Function.
 
 ![CloudWatch Log CloudFormation Create](CloudWatchLogCreateCleaned.png)
 
@@ -322,6 +322,8 @@ Blah Blah Blah.
 }
 ```
 
+As well as the respond from Lambda Function back to CloudFormation Stack; what information and the structure of the information being passed from Lambda Function to CloudFormation Stack.
+
 ![CloudWatch Log Result](CloudWatchLogResultCleaned.png)
 
 ```
@@ -341,6 +343,8 @@ Blah Blah Blah.
 }
 ```
 
+Below are the headers information of the respond from Lambda Function back to CloudFormation Stack.
+
 ![CloudWatch Log Header](CloudWatchLogHeader.png)
 
 ```
@@ -355,7 +359,11 @@ Blah Blah Blah.
 }
 ```
 
+The followings are similar visuals as the above, but the followings are the result of CloudFormation Delete Request to the Lambda Function.
+
 ![CloudWatch LogGroups CloudFormation Delete](CloudWatchLogGroupsDeleteCleaned.png)
+
+CloudFormation Delete Request details from CloudFormation Stack to Lambda Function.
 
 ![CloudWatch Log CloudFormation Delete](CloudWatchLogDeleteRequestCleaned.png)
 
@@ -377,6 +385,8 @@ Blah Blah Blah.
 }
 ```
 
+Respond from Lambda Function back to CloudFormation Stack, up on the CloudFormation Delete Request.
+
 ![CloudWatch Log Delete Result](CloudWatchLogDeleteResultCleaned.png)
 
 ```
@@ -392,6 +402,8 @@ Blah Blah Blah.
     }
 }
 ```
+
+The headers information of the respond from Lambda Function back to CloudFormation Stack up on the CloudFormation Delete Request.
 
 ![CloudWatch Log Delete Header](CloudWatchLogDeleteHeader.png)
 
