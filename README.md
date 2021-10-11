@@ -18,7 +18,7 @@ This Repository covers only the Skeleton of how to :
 
 <br>
 
-Other more advanced aspects of Lambda are not covered.
+Other aspects of Lambda are not covered.
 
 
 
