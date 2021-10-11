@@ -236,11 +236,54 @@ function sendResponse(event, context, responseStatus, responseData) {
 
 
 
+### Obtaining Results / Outputs
+
+```
+    "LambdaFunction": {
+      "Value": { "Ref": "RandomWordFunction" },
+      "Description": "Look at \"CloudWatch > Log Groups > /aws/lambda/[this-value-reference]\" for the logs of this Lambda Function"
+    },
+    "SystemInput": {
+      "Value": { "Fn::GetAtt": [ "RandomWordInterface", "SystemInput" ] },
+      "Description": "One of the inputs into the Lambda Function (labelled as \"SystemInput\", value is AWS Region)"
+    },
+    "UserInput": {
+      "Value": { "Fn::GetAtt": [ "RandomWordInterface", "UserInput" ] },
+      "Description": "One of the inputs into the Lambda Function (labelled as \"UserInput\")"
+    },
+    "Reason": {
+      "Value": { "Fn::GetAtt": [ "RandomWordInterface", "Reason" ] },
+      "Description": "One of the results of the Lambda Function (labelled as \"Reason\")"
+    },
+    "Result": {
+      "Value": { "Fn::GetAtt": [ "RandomWordInterface", "Result" ] },
+      "Description": "The other result of the Lambda Function (labelled as \"Result\")"
+    }
+```
+
+To obtain the results / outputs of the Lambda Function, use `Fn::GetAtt` on the Custom Resource, stating the Key of the `responseData` .
+
+|Data Submitted at Lambda Function|Data Extracted at CloudFormation|
+| --- | --- |
+|`responseData["SystemInput"] = event.ResourceProperties.SystemInput;`|`{ "Fn::GetAtt": [ "RandomWordInterface", "SystemInput" ] }`|
+|`responseData["UserInput"] = event.ResourceProperties.UserInput;`|`{ "Fn::GetAtt": [ "RandomWordInterface", "UserInput" ] }`|
+|`responseData["Reason"] = "Called to Generate Random Word";`|`{ "Fn::GetAtt": [ "RandomWordInterface", "Reason" ] }`|
+|`responseData["Result"] = "Result Word";`|`{ "Fn::GetAtt": [ "RandomWordInterface", "Result" ] }`|
+
+Assuming the Lambda Functions are identical between *In-Line* and *On S3 Bucket*, the way to extract / obtain Lambda Function's Results should be identical also.
 
 
 
+### Visuals
+
+Below are some visuals to help picking up the understanding faster.
+We run the example [LambdaSkeletonCF.json](LambdaSkeletonCF.json) on AWS Region `ap-southeast-1`, and give the CloudFormation's Stack Name `LambdaSkeleton`, and parameter `UserInput` : `Just Input Text from the User` .
 
 ![CloudFormation Parameters](CloudFormationParametersCleaned.png)
+
+
+
+
 
 ![CloudFormation Outputs](CloudFormationOutputs.png)
 

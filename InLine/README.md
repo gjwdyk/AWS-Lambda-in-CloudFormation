@@ -191,6 +191,8 @@ To obtain the results / outputs of the Lambda Function, use `Fn::GetAtt` on the 
 |`"responseData[\"Reason\"] = \"Called to Generate Random Word\";",`|`{ "Fn::GetAtt": [ "RandomWordInterface", "Reason" ] }`|
 |`"responseData[\"Result\"] = \"Result Word\";",`|`{ "Fn::GetAtt": [ "RandomWordInterface", "Result" ] }`|
 
+Assuming the Lambda Functions are identical between *In-Line* and *On S3 Bucket*, the way to extract / obtain Lambda Function's Results should be identical also.
+
 
 
 ### Visuals
