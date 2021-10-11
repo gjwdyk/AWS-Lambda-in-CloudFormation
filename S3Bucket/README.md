@@ -285,13 +285,23 @@ We run the example [LambdaSkeletonCF.json](LambdaSkeletonCF.json) on AWS Region 
 
 ![CloudFormation Parameters](CloudFormationParametersCleaned.png)
 
-
-
-
+After the CloudFormation Stack building were finished, the result of the Lambda Function call can be seen on the CloudFormation Outputs section :
 
 ![CloudFormation Outputs](CloudFormationOutputs.png)
 
+| Key | Value | Description | Export name |
+| --- | --- | --- | --- |
+|LambdaFunction|LambdaSkeleton-RandomWordFunction-kx2rsG2shEbv|Look at "CloudWatch > Log Groups > /aws/lambda/[this-value-reference]" for the logs of this Lambda Function|-|
+|Reason|Called to Generate Random Word|One of the results of the Lambda Function (labelled as "Reason")|-|
+|Result|Result Word|The other result of the Lambda Function (labelled as "Result")|-|
+|SystemInput|ap-southeast-1|One of the inputs into the Lambda Function (labelled as "SystemInput", value is AWS Region)|-|
+|UserInput|Just a User's Input Text|One of the inputs into the Lambda Function (labelled as "UserInput")|-|
+
+Note the value of `LambdaFunction` output, and go to `CloudWatch` > `Log Groups` > `/aws/lambda/LambdaSkeleton-RandomWordFunction-kx2rsG2shEbv` and click on one of the events on the list.
+
 ![CloudWatch LogGroups CloudFormation Create](CloudWatchLogGroupsCreateCleaned.png)
+
+Blah Blah Blah.
 
 ![CloudWatch Log CloudFormation Create](CloudWatchLogCreateCleaned.png)
 
