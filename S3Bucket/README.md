@@ -171,13 +171,11 @@ A few notes here :
 - [ ] You can send response without `responseData`, as example : `//sendResponse(event, context, responseStatus);` .
 - [ ] You can send string `"SUCCESS"` or `"FAILED"` as `responseStatus` to indicate the success or failure of the Lambda Function.
   - [ ] Alternatively, you can also skip the `responseStatus` variable and directly hard core the response status when calling the `sendResponse` function. Example: `sendResponse(event, context, "SUCCESS", responseData);` .
-
-
 - [ ] After a proper initiation of `responseData`, you can assign multiple "Key:Value" properties to `responseData` variable, which you can pick up at the CloudFormation template/stack. Examples :
-  - [ ] `responseData["SystemInput"] = event.ResourceProperties.SystemInput;`,
-  - [ ] `responseData["UserInput"] = event.ResourceProperties.UserInput;`,
-  - [ ] `responseData["Reason"] = "Called to Generate Random Word";`,
-  - [ ] `responseData["Result"] = "Result Word";`.
+  - [ ] `responseData["SystemInput"] = event.ResourceProperties.SystemInput;` ,
+  - [ ] `responseData["UserInput"] = event.ResourceProperties.UserInput;` ,
+  - [ ] `responseData["Reason"] = "Called to Generate Random Word";` ,
+  - [ ] `responseData["Result"] = "Result Word";` .
 
 
 
