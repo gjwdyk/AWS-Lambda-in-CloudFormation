@@ -94,6 +94,9 @@ Assuming the Lambda Functions are identical between *In-Line* and *On S3 Bucket*
 
 ### Lambda Function (at CloudFormation Template)
 
+The Lambda Function object refers to *S3 Bucket* and *`.zip` File* which contains the Lambda Function source code.
+It also refers to *Script File Name inside the `.zip` File* which contains the main *Handler* function to be invoked by CloudFormation.
+
 ```
     "RandomWordFunction": {
       "Type": "AWS::Lambda::Function",
@@ -115,10 +118,9 @@ Assuming the Lambda Functions are identical between *In-Line* and *On S3 Bucket*
     }
 ```
 
-
-- [ ] `"S3Bucket": { "Ref": "S3Bucket" },`
-- [ ] `"S3Key": { "Ref": "S3Key" }`
-- [ ] `"Handler": { "Fn::Join" : [ "", [{ "Ref": "ModuleName" },".handler"] ] },`
+- [ ] `"S3Bucket": { "Ref": "S3Bucket" },` refers to the S3 Bucket which is used to store the Lambda Function source code(s),
+- [ ] `"S3Key": { "Ref": "S3Key" }` refers to the S3 Key (i.e. the `.zip` file) which contains the Lambda Function source code(s),
+- [ ] `"Handler": { "Fn::Join" : [ "", [{ "Ref": "ModuleName" },".handler"] ] },` ; the handler refers to the ModuleName (which is the Script's File Name inside the `.zip` file, which contains the handler function to be invoked by the CloudFormation.
 
 
 
