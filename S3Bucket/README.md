@@ -145,21 +145,107 @@ Assuming the Lambda Functions are identical between *In-Line* and *On S3 Bucket*
 
 ![CloudWatch Log CloudFormation Create](CloudWatchLogCreate.png)
 
+```
+{
+    "RequestType": "Create",
+    "ServiceToken": "arn:aws:lambda:ap-southeast-1:311907896382:function:LambdaSkeleton-RandomWordFunction-kx2rsG2shEbv",
+    "ResponseURL": "https://cloudformation-custom-resource-response-apsoutheast1.s3-ap-southeast-1.amazonaws.com/arn%3Aaws%3Acloudformation%3Aap-southeast-1%3A311907896382%3Astack/LambdaSkeleton/d3e868a0-2a40-11ec-837c-021d0c431fbc%7CRandomWordInterface%7C0675ab02-fcc6-467b-9da6-dca477cbbf85?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20211011T031120Z&X-Amz-SignedHeaders=host&X-Amz-Expires=7199&X-Amz-Credential=AKIAXKFFXMS3SZT624PI%2F20211011%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Signature=665dad521fc616d9b76398d8104572e849882d60653a2bd6781ae294d248cc17",
+    "StackId": "arn:aws:cloudformation:ap-southeast-1:311907896382:stack/LambdaSkeleton/d3e868a0-2a40-11ec-837c-021d0c431fbc",
+    "RequestId": "0675ab02-fcc6-467b-9da6-dca477cbbf85",
+    "LogicalResourceId": "RandomWordInterface",
+    "ResourceType": "Custom::RandomWordInterface",
+    "ResourceProperties": {
+        "ServiceToken": "arn:aws:lambda:ap-southeast-1:311907896382:function:LambdaSkeleton-RandomWordFunction-kx2rsG2shEbv",
+        "UserInput": "Just Input Text from the User",
+        "SystemInput": "ap-southeast-1"
+    }
+}
+```
+
 ![CloudWatch Log Result](CloudWatchLogResult.png)
 
+```
+{
+    "Status": "SUCCESS",
+    "Reason": "See the details in CloudWatch Log Stream: 2021/10/11/[$LATEST]15bcc775bc22406eb2e989956d984170",
+    "PhysicalResourceId": "2021/10/11/[$LATEST]15bcc775bc22406eb2e989956d984170",
+    "StackId": "arn:aws:cloudformation:ap-southeast-1:311907896382:stack/LambdaSkeleton/d3e868a0-2a40-11ec-837c-021d0c431fbc",
+    "RequestId": "0675ab02-fcc6-467b-9da6-dca477cbbf85",
+    "LogicalResourceId": "RandomWordInterface",
+    "Data": {
+        "SystemInput": "ap-southeast-1",
+        "UserInput": "Just Input Text from the User",
+        "Reason": "Called to Generate Random Word",
+        "Result": "Result Word"
+    }
+}
+```
+
 ![CloudWatch Log Header](CloudWatchLogHeader.png)
+
+```
+{
+    "x-amz-id-2": "NjUf4vanwEuhRLlHMIG0skFZOx4qIjLM2bJ7zIb10CQ/+bY2tLSdPpUmIAYmfPnTYMViTEGTq1Q=",
+    "x-amz-request-id": "HSPZMH0M3MEHP08K",
+    "date": "Mon, 11 Oct 2021 03:11:23 GMT",
+    "etag": "\"a89492af62edd6799da40453438e8c60\"",
+    "server": "AmazonS3",
+    "content-length": "0",
+    "connection": "close"
+}
+```
 
 ![CloudWatch LogGroups CloudFormation Delete](CloudWatchLogGroupsDelete.png)
 
 ![CloudWatch Log CloudFormation Delete](CloudWatchLogDeleteRequest.png)
 
+```
+{
+    "RequestType": "Delete",
+    "ServiceToken": "arn:aws:lambda:ap-southeast-1:311907896382:function:LambdaSkeleton-RandomWordFunction-kx2rsG2shEbv",
+    "ResponseURL": "https://cloudformation-custom-resource-response-apsoutheast1.s3-ap-southeast-1.amazonaws.com/arn%3Aaws%3Acloudformation%3Aap-southeast-1%3A311907896382%3Astack/LambdaSkeleton/d3e868a0-2a40-11ec-837c-021d0c431fbc%7CRandomWordInterface%7C620f5f59-abae-43d0-a8e8-83b7cd536fd0?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20211011T031938Z&X-Amz-SignedHeaders=host&X-Amz-Expires=7200&X-Amz-Credential=AKIAXKFFXMS3SZT624PI%2F20211011%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Signature=5fdf0487c98ed79a97f3decf4249eef18f95e285ce312ac5fc5379c2bc487b44",
+    "StackId": "arn:aws:cloudformation:ap-southeast-1:311907896382:stack/LambdaSkeleton/d3e868a0-2a40-11ec-837c-021d0c431fbc",
+    "RequestId": "620f5f59-abae-43d0-a8e8-83b7cd536fd0",
+    "LogicalResourceId": "RandomWordInterface",
+    "PhysicalResourceId": "2021/10/11/[$LATEST]15bcc775bc22406eb2e989956d984170",
+    "ResourceType": "Custom::RandomWordInterface",
+    "ResourceProperties": {
+        "ServiceToken": "arn:aws:lambda:ap-southeast-1:311907896382:function:LambdaSkeleton-RandomWordFunction-kx2rsG2shEbv",
+        "UserInput": "Just Input Text from the User",
+        "SystemInput": "ap-southeast-1"
+    }
+}
+```
+
 ![CloudWatch Log Delete Result](CloudWatchLogDeleteResult.png)
+
+```
+{
+    "Status": "SUCCESS",
+    "Reason": "See the details in CloudWatch Log Stream: 2021/10/11/[$LATEST]8ec491bec2344104b31141850e2f288d",
+    "PhysicalResourceId": "2021/10/11/[$LATEST]8ec491bec2344104b31141850e2f288d",
+    "StackId": "arn:aws:cloudformation:ap-southeast-1:311907896382:stack/LambdaSkeleton/d3e868a0-2a40-11ec-837c-021d0c431fbc",
+    "RequestId": "620f5f59-abae-43d0-a8e8-83b7cd536fd0",
+    "LogicalResourceId": "RandomWordInterface",
+    "Data": {
+        "Reason": "CloudFormation Delete Request"
+    }
+}
+```
 
 ![CloudWatch Log Delete Header](CloudWatchLogDeleteHeader.png)
 
-
-
-
+```
+{
+    "x-amz-id-2": "pekquKwViDdB8HWJjPG76ve6v6VZlSJTAuMfhIwNwEHQyfAzlMlZDcvPhDPx9rSrS72kmrOlCvU=",
+    "x-amz-request-id": "FBYZN6SCKM2MNF43",
+    "date": "Mon, 11 Oct 2021 03:19:40 GMT",
+    "etag": "\"8ee51930dc889e6fd446e83ae52203cb\"",
+    "server": "AmazonS3",
+    "content-length": "0",
+    "connection": "close"
+}
+```
 
 
 
