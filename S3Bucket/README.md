@@ -277,7 +277,11 @@ Assuming the Lambda Functions are identical between *In-Line* and *On S3 Bucket*
 ### Visuals
 
 Below are some visuals to help picking up the understanding faster.
-We run the example [LambdaSkeletonCF.json](LambdaSkeletonCF.json) on AWS Region `ap-southeast-1`, and give the CloudFormation's Stack Name `LambdaSkeleton`, and parameter `UserInput` : `Just Input Text from the User` .
+We run the example [LambdaSkeletonCF.json](LambdaSkeletonCF.json) on AWS Region `ap-southeast-1`, and give the CloudFormation's Stack Name `LambdaSkeleton`, and parameters :
+- [ ] `S3Bucket` : `aws-xxxxxxxxx-lambda-bucket` ,
+- [ ] `S3Key` : `LambdaSkeleton.zip` ,
+- [ ] `ModuleName` : `LambdaSkeleton` ,
+- [ ] `UserInput` : `Just Input Text from the User` .
 
 ![CloudFormation Parameters](CloudFormationParametersCleaned.png)
 
