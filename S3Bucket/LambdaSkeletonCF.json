@@ -1,0 +1,116 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Lambda Function creation within CloudFormation Template",
+  "Parameters": {
+    "S3Bucket" : {
+      "Description" : "The name of S3 Bucket that contains the packaged Lambda source code",
+      "Type" : "String"
+    },
+    "S3Key" : {
+      "Description" : "The name of the ZIP package",
+      "Type" : "String",
+      "Default" : "LambdaSkeleton.zip"
+    },
+    "ModuleName" : {
+      "Description" : "The name of the JavaScript file, inside the ZIP file",
+      "Type" : "String",
+      "Default" : "LambdaSkeleton"
+    },
+    "UserInput": {
+      "Description": "A User Input to the Lambda Function",
+      "Type": "String"
+    }
+  },
+  "Metadata": {
+  },
+  "Resources": {
+    "LambdaExecutionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "lambda.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "lambdalogtocloudwatch",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
+                  "Resource": "arn:aws:logs:*:*:*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "RandomWordInterface": {
+      "Type": "Custom::RandomWordInterface",
+      "Properties": {
+        "ServiceToken": { "Fn::GetAtt" : ["RandomWordFunction", "Arn"] },
+        "SystemInput": { "Ref": "AWS::Region" },
+        "UserInput": { "Ref": "UserInput" }
+      }
+    },
+    "RandomWordFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": { "Ref": "S3Bucket" },
+          "S3Key": { "Ref": "S3Key" }
+        },
+        "Handler": { "Fn::Join" : [ "", [{ "Ref": "ModuleName" },".handler"] ] },
+        "Runtime": "nodejs14.x",
+        "Timeout": "30",
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaExecutionRole",
+            "Arn"
+          ]
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "LambdaFunction": {
+      "Value": { "Ref": "RandomWordFunction" },
+      "Description": "Look at \"CloudWatch > Log Groups > /aws/lambda/[this-value-reference]\" for the logs of this Lambda Function"
+    },
+    "SystemInput": {
+      "Value": { "Fn::GetAtt": [ "RandomWordInterface", "SystemInput" ] },
+      "Description": "One of the inputs into the Lambda Function (labelled as \"SystemInput\", value is AWS Region)"
+    },
+    "UserInput": {
+      "Value": { "Fn::GetAtt": [ "RandomWordInterface", "UserInput" ] },
+      "Description": "One of the inputs into the Lambda Function (labelled as \"UserInput\")"
+    },
+    "Reason": {
+      "Value": { "Fn::GetAtt": [ "RandomWordInterface", "Reason" ] },
+      "Description": "One of the results of the Lambda Function (labelled as \"Reason\")"
+    },
+    "Result": {
+      "Value": { "Fn::GetAtt": [ "RandomWordInterface", "Result" ] },
+      "Description": "The other result of the Lambda Function (labelled as \"Result\")"
+    }
+  }
+}
