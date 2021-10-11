@@ -92,11 +92,46 @@ Assuming the Lambda Functions are identical between *In-Line* and *On S3 Bucket*
 
 
 
+### Lambda Function (at CloudFormation Template)
+
+```
+    "RandomWordFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": { "Ref": "S3Bucket" },
+          "S3Key": { "Ref": "S3Key" }
+        },
+        "Handler": { "Fn::Join" : [ "", [{ "Ref": "ModuleName" },".handler"] ] },
+        "Runtime": "nodejs14.x",
+        "Timeout": "30",
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaExecutionRole",
+            "Arn"
+          ]
+        }
+      }
+    }
+```
+
+
+- [ ] `"S3Bucket": { "Ref": "S3Bucket" },`
+- [ ] `"S3Key": { "Ref": "S3Key" }`
+- [ ] `"Handler": { "Fn::Join" : [ "", [{ "Ref": "ModuleName" },".handler"] ] },`
+
+
+
 ### Lambda Function (On S3 Bucket)
 
-
-
 [LambdaSkeleton.js](LambdaSkeleton.js)
+
+
+
+
+
+
+
 
 
 
