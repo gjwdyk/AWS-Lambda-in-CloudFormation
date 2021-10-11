@@ -134,10 +134,107 @@ And the `.zip` File needs to be readable by the CloudFormation Stack (i.e. publi
 
 ![File Permissions](S3FilePermissionsCleaned.png)
 
+The example above place the Lambda Function source code on AWS S3 Bucket `aws-xxxxxxxxx-lambda-bucket` within a `.zip` File Name `LambdaSkeleton.zip` .
+Inside the `.zip` File, there is only one Script with File Name [LambdaSkeleton.js](LambdaSkeleton.js) .
+
+```
+exports.handler = function(event, context) {
+
+  var responseData = {};
+  var responseStatus = "FAILED";
+  console.log("REQUEST RECEIVED:\n" + JSON.stringify(event));
+
+  if (event.RequestType == "Delete") {
+    responseStatus = "SUCCESS";
+    //sendResponse(event, context, responseStatus);
+    responseData["Reason"] = "CloudFormation Delete Request";
+    sendResponse(event, context, responseStatus, responseData);
+    return;
+  }
+
+  responseStatus = "SUCCESS";
+
+  responseData["SystemInput"] = event.ResourceProperties.SystemInput;
+  responseData["UserInput"] = event.ResourceProperties.UserInput;
+  responseData["Reason"] = "Called to Generate Random Word";
+  responseData["Result"] = "Result Word";
+
+  sendResponse(event, context, responseStatus, responseData);
+
+};
+```
+
+A few notes here :
+
+- [ ] Ensure that the `responseData` is initiated (type declaration), as per example : `var responseData = {};`. Missing the type declaration will cause any value assignment to the variable to throw error. Similarly with the `responseStatus` variable.
+- [ ] When CloudFormation is deleted, there will be a call to the Lambda Function, for the Lambda Function to properly close resources / finish its process / terminate resources. This is catched with : `if (event.RequestType == "Delete") {` .
+- [ ] You can send response without `responseData`, as example : `//sendResponse(event, context, responseStatus);` .
+- [ ] You can send string `"SUCCESS"` or `"FAILED"` as `responseStatus` to indicate the success or failure of the Lambda Function.
+  - [ ] Alternatively, you can also skip the `responseStatus` variable and directly hard core the response status when calling the `sendResponse` function. Example: `sendResponse(event, context, "SUCCESS", responseData);` .
 
 
-[LambdaSkeleton.js](LambdaSkeleton.js)
+- [ ] After a proper initiation of `responseData`, you can assign multiple "Key:Value" properties to `responseData` variable, which you can pick up at the CloudFormation template/stack. Examples :
+  - [ ] `responseData["SystemInput"] = event.ResourceProperties.SystemInput;`,
+  - [ ] `responseData["UserInput"] = event.ResourceProperties.UserInput;`,
+  - [ ] `responseData["Reason"] = "Called to Generate Random Word";`,
+  - [ ] `responseData["Result"] = "Result Word";`.
 
+
+
+- [ ] `"var response = require('cfn-response');",` is needed for logging as well as passing through the results / outputs back to CloudFormation stack. This "import" of `cfn-response` module line is applicable only for in-line Lambda codes. When the Lambda code is located at a S3 bucket, you need to write your own function / module to handle the same. You can copy the source code of the `cfn-response` module from the following GitHub reference. References :
+  - [ ] [`cfn-response` module at GitHub](https://github.com/awsdocs/aws-cloudformation-user-guide/blob/main/doc_source/cfn-lambda-function-code-cfnresponsemodule.md) ,
+  - [ ] [`cfn-response` module at AWS CloudFormation Documentation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-lambda-function-code-cfnresponsemodule.html) .
+- [ ] `"exports.handler = function(event, context) {",` and `"Handler": "index.handler",`. These are the default module name of the in-line Lambda Function, as well as the default handler name of the in-line Lambda Function.
+
+
+```
+function sendResponse(event, context, responseStatus, responseData) {
+
+  var responseBody = JSON.stringify({
+    Status: responseStatus,
+    Reason: "See the details in CloudWatch Log Stream: " + context.logStreamName,
+    PhysicalResourceId: context.logStreamName,
+    StackId: event.StackId,
+    RequestId: event.RequestId,
+    LogicalResourceId: event.LogicalResourceId,
+    Data: responseData
+  });
+
+  console.log("RESPONSE BODY:\n", responseBody);
+
+  var https = require("https");
+  var url = require("url");
+
+  var parsedUrl = url.parse(event.ResponseURL);
+  var options = {
+    hostname: parsedUrl.hostname,
+    port: 443,
+    path: parsedUrl.path,
+    method: "PUT",
+    headers: {
+      "content-type": "",
+      "content-length": responseBody.length
+    }
+  };
+
+  console.log("SENDING RESPONSE...\n");
+
+  var request = https.request(options, function(response) {
+    console.log("STATUS: " + response.statusCode);
+    console.log("HEADERS: " + JSON.stringify(response.headers));
+    context.done();
+  });
+
+  request.on("error", function(error) {
+    console.log("sendResponse Error:" + error);
+    context.done();
+  });
+
+  request.write(responseBody);
+  request.end();
+
+}
+```
 
 
 
