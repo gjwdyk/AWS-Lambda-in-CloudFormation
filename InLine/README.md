@@ -12,6 +12,8 @@ Let's review the components of the CloudFormation and Lambda in [LambdaSkeletonC
 
 Minimum Policy Role for the LambdaFunction is to log it's own process to CloudWatch. This may be useful when doing tracing or troubleshooting.
 
+Assuming the Lambda Functions are identical between *In-Line* and *On S3 Bucket*, the Policy Role should be identical also.
+
 ```
     "LambdaExecutionRole": {
       "Type": "AWS::IAM::Role",
@@ -85,6 +87,8 @@ In the case where no input to the Lambda is needed, the Custom Resource is still
 ```
 
 In some documentations, this Custom Resource also represent what is stated as `Pre Signed S3 URL`, which is useful to pass information / outputs / results from the Lambda Function to CloudFormation.
+
+Assuming the Lambda Functions are identical between *In-Line* and *On S3 Bucket*, the Custom Resource should be identical also.
 
 
 
