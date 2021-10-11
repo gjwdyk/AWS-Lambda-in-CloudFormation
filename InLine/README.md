@@ -210,19 +210,19 @@ We run the example [LambdaSkeletonCF.json](LambdaSkeletonCF.json) on AWS Region 
 
 Note the value of `LambdaFunction` output, and go to `CloudWatch` > `Log Groups` > `/aws/lambda/ByLambSkeletCF-RandomWordFunction-8lN99BdtUMKK` and click on one of the events on the list.
 
-![CloudWatch's Log Groups](CloudWatchLogGroups.png)
+![CloudWatch's Log Groups](CloudWatchLogGroupsCleaned.png)
 
 You can view further in more details by expanding each log item, expecially one with a `Response Body` .
 Below is a log containing the response from Lambda Function back to CloudFormation.
 
-![CloudWatch Log on CloudFormation's Call to the Lambda Function](CloudWatchLogCloudFormationCall.png)
+![CloudWatch Log on CloudFormation's Call to the Lambda Function](CloudWatchLogCloudFormationResultCleaned.png)
 
 ```
 {
     "Status": "SUCCESS",
     "Reason": "See the details in CloudWatch Log Stream: 2021/10/10/[$LATEST]9096bfdbb4bb40589f1b3b3c0288f0be",
     "PhysicalResourceId": "2021/10/10/[$LATEST]9096bfdbb4bb40589f1b3b3c0288f0be",
-    "StackId": "arn:aws:cloudformation:ap-southeast-1:400000000002:stack/ByLambSkeletCF/6bc68240-298a-11ec-af4d-02fff677bb6e",
+    "StackId": "arn:aws:cloudformation:ap-southeast-1:000000000000:stack/ByLambSkeletCF/6bc68240-298a-11ec-af4d-02fff677bb6e",
     "RequestId": "d418d8ba-d8e5-41e2-a9ee-ced75039a22c",
     "LogicalResourceId": "RandomWordInterface",
     "NoEcho": false,
@@ -239,14 +239,14 @@ You can review the structure of the `responseData` (i.e. the `Data` section of t
 
 Below is a log containing the response from Lambda Function back to CloudFormation, when the CloudFormation is Deleted.
 
-![CloudWatch Log up on CloudFormation's Deletion](CloudWatchLogCloudFormationDelete.png)
+![CloudWatch Log up on CloudFormation's Deletion](CloudWatchLogCloudFormationDeleteResultCleaned.png)
 
 ```
 {
     "Status": "SUCCESS",
     "Reason": "See the details in CloudWatch Log Stream: 2021/10/10/[$LATEST]9096bfdbb4bb40589f1b3b3c0288f0be",
     "PhysicalResourceId": "2021/10/10/[$LATEST]9096bfdbb4bb40589f1b3b3c0288f0be",
-    "StackId": "arn:aws:cloudformation:ap-southeast-1:400000000002:stack/ByLambSkeletCF/6bc68240-298a-11ec-af4d-02fff677bb6e",
+    "StackId": "arn:aws:cloudformation:ap-southeast-1:000000000000:stack/ByLambSkeletCF/6bc68240-298a-11ec-af4d-02fff677bb6e",
     "RequestId": "61f9d5c0-4950-4da4-bc09-6dc7debb7c9a",
     "LogicalResourceId": "RandomWordInterface",
     "NoEcho": false,
