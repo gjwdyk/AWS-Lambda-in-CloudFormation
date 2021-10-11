@@ -133,11 +133,11 @@ Assuming the Lambda Functions are identical between *In-Line* and *On S3 Bucket*
 
 
 
-![S3 Bucket](S3Bucket.png)
+![S3 Bucket](S3BucketCleaned.png)
 
-![File Permissions](S3FilePermissions.png)
+![File Permissions](S3FilePermissionsCleaned.png)
 
-![CloudFormation Parameters](CloudFormationParameters.png)
+![CloudFormation Parameters](CloudFormationParametersCleaned.png)
 
 ![CloudFormation Outputs](CloudFormationOutputs.png)
 
