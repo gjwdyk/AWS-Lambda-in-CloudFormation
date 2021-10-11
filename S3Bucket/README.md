@@ -133,16 +133,29 @@ Assuming the Lambda Functions are identical between *In-Line* and *On S3 Bucket*
 
 
 
+![S3 Bucket](S3Bucket.png)
 
+![File Permissions](S3FilePermissions.png)
 
+![CloudFormation Parameters](CloudFormationParameters.png)
 
+![CloudFormation Outputs](CloudFormationOutputs.png)
 
+![CloudWatch LogGroups CloudFormation Create](CloudWatchLogGroupsCreate.png)
 
+![CloudWatch Log CloudFormation Create](CloudWatchLogCreate.png)
 
+![CloudWatch Log Result](CloudWatchLogResult.png)
 
+![CloudWatch Log Header](CloudWatchLogHeader.png)
 
+![CloudWatch LogGroups CloudFormation Delete](CloudWatchLogGroupsDelete.png)
 
+![CloudWatch Log CloudFormation Delete](CloudWatchLogDeleteRequest.png)
 
+![CloudWatch Log Delete Result](CloudWatchLogDeleteResult.png)
+
+![CloudWatch Log Delete Header](CloudWatchLogDeleteHeader.png)
 
 
 
