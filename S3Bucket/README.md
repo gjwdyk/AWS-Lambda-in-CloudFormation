@@ -285,6 +285,8 @@ We run the example [LambdaSkeletonCF.json](LambdaSkeletonCF.json) on AWS Region 
 
 ![CloudFormation Parameters](CloudFormationParametersCleaned.png)
 
+Note that you need to place the `.zip` File on the designated S3 Bucket before you run the CloudFormation Template.
+
 After the CloudFormation Stack building were finished, the result of the Lambda Function call can be seen on the CloudFormation Outputs section :
 
 ![CloudFormation Outputs](CloudFormationOutputs.png)
