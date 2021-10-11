@@ -177,13 +177,13 @@ A few notes here :
   - [ ] `responseData["Reason"] = "Called to Generate Random Word";` ,
   - [ ] `responseData["Result"] = "Result Word";` .
 
-Blah Blah Blah.
+The `sendResponse` function is needed for logging as well as passing through the results / outputs back to CloudFormation stack. The `sendResponse` function can be referred from either one of the references below :
+- [ ] [`cfn-response` module at GitHub](https://github.com/awsdocs/aws-cloudformation-user-guide/blob/main/doc_source/cfn-lambda-function-code-cfnresponsemodule.md) ,
+- [ ] [`cfn-response` module at AWS CloudFormation Documentation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-lambda-function-code-cfnresponsemodule.html) .
+- [ ] the below example, as also included on the [LambdaSkeleton.js](LambdaSkeleton.js) .
 
-- [ ] `"var response = require('cfn-response');",` is needed for logging as well as passing through the results / outputs back to CloudFormation stack. This "import" of `cfn-response` module line is applicable only for in-line Lambda codes. When the Lambda code is located at a S3 bucket, you need to write your own function / module to handle the same. You can copy the source code of the `cfn-response` module from the following GitHub reference. References :
-  - [ ] [`cfn-response` module at GitHub](https://github.com/awsdocs/aws-cloudformation-user-guide/blob/main/doc_source/cfn-lambda-function-code-cfnresponsemodule.md) ,
-  - [ ] [`cfn-response` module at AWS CloudFormation Documentation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-lambda-function-code-cfnresponsemodule.html) .
-- [ ] `"exports.handler = function(event, context) {",` and `"Handler": "index.handler",`. These are the default module name of the in-line Lambda Function, as well as the default handler name of the in-line Lambda Function.
-
+Note that if you put the Lambda code *InLine* within the CloudFormation Template, you can simply "import" of `cfn-response` module with command `"var response = require('cfn-response');",` .
+When the Lambda code is located at a S3 bucket, you need to write your own function / module to handle the same; hence in [LambdaSkeleton.js](LambdaSkeleton.js) we have a code section specifically for this.
 
 ```
 function sendResponse(event, context, responseStatus, responseData) {
