@@ -295,7 +295,7 @@ After the CloudFormation Stack building were finished, the result of the Lambda 
 |Reason|Called to Generate Random Word|One of the results of the Lambda Function (labelled as "Reason")|-|
 |Result|Result Word|The other result of the Lambda Function (labelled as "Result")|-|
 |SystemInput|ap-southeast-1|One of the inputs into the Lambda Function (labelled as "SystemInput", value is AWS Region)|-|
-|UserInput|Just a User's Input Text|One of the inputs into the Lambda Function (labelled as "UserInput")|-|
+|UserInput|Just Input Text from the User|One of the inputs into the Lambda Function (labelled as "UserInput")|-|
 
 Note the value of `LambdaFunction` output, and go to `CloudWatch` > `Log Groups` > `/aws/lambda/LambdaSkeleton-RandomWordFunction-kx2rsG2shEbv` and click on one of the events on the list.
 
