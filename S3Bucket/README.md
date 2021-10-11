@@ -126,6 +126,16 @@ It also refers to *Script File Name* inside the `.zip` File, which contains the 
 
 ### Lambda Function (On S3 Bucket)
 
+The Lambda Function source code needs to be bundled together into a `.zip` File, when placed in the designated S3 Bucket.
+
+![S3 Bucket](S3BucketCleaned.png)
+
+And the `.zip` File needs to be readable by the CloudFormation Stack (i.e. public read-only permission).
+
+![File Permissions](S3FilePermissionsCleaned.png)
+
+
+
 [LambdaSkeleton.js](LambdaSkeleton.js)
 
 
@@ -134,10 +144,6 @@ It also refers to *Script File Name* inside the `.zip` File, which contains the 
 
 
 
-
-![S3 Bucket](S3BucketCleaned.png)
-
-![File Permissions](S3FilePermissionsCleaned.png)
 
 ![CloudFormation Parameters](CloudFormationParametersCleaned.png)
 
