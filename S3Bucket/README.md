@@ -2,7 +2,7 @@
 
 ## Lambda Code in S3 Bucket
 
-[LambdaSkeletonCF.json](LambdaSkeletonCF.json) is a sample CloudFormation Template which contains/refers to a Lambda Function located in S3 Bucket.
+[LambdaSkeletonCF.json](LambdaSkeletonCF.json) is a sample CloudFormation Template which contains / refers to a Lambda Function located in S3 Bucket.
 
 Let's review the components of the CloudFormation Template, and how the CloudFormation incorporates the Lambda Function on S3 Bucket. Basic CloudFormation elements will not be discussed :
 
