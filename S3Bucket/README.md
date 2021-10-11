@@ -177,7 +177,7 @@ A few notes here :
   - [ ] `responseData["Reason"] = "Called to Generate Random Word";` ,
   - [ ] `responseData["Result"] = "Result Word";` .
 
-
+Blah Blah Blah.
 
 - [ ] `"var response = require('cfn-response');",` is needed for logging as well as passing through the results / outputs back to CloudFormation stack. This "import" of `cfn-response` module line is applicable only for in-line Lambda codes. When the Lambda code is located at a S3 bucket, you need to write your own function / module to handle the same. You can copy the source code of the `cfn-response` module from the following GitHub reference. References :
   - [ ] [`cfn-response` module at GitHub](https://github.com/awsdocs/aws-cloudformation-user-guide/blob/main/doc_source/cfn-lambda-function-code-cfnresponsemodule.md) ,
