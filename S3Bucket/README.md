@@ -95,7 +95,7 @@ Assuming the Lambda Functions are identical between *In-Line* and *On S3 Bucket*
 ### Lambda Function (at CloudFormation Template)
 
 The Lambda Function object refers to *S3 Bucket* and *`.zip` File* which contains the Lambda Function source code.
-It also refers to *Script File Name inside the `.zip` File* which contains the main *Handler* function to be invoked by CloudFormation.
+It also refers to *Script File Name* inside the `.zip` File, which contains the main *Handler* function to be invoked by CloudFormation.
 
 ```
     "RandomWordFunction": {
