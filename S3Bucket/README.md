@@ -141,7 +141,7 @@ Assuming the Lambda Functions are identical between *In-Line* and *On S3 Bucket*
 
 ![CloudFormation Outputs](CloudFormationOutputs.png)
 
-![CloudWatch LogGroups CloudFormation Create](CloudWatchLogGroupsCreate.png)
+![CloudWatch LogGroups CloudFormation Create](CloudWatchLogGroupsCreateCleaned.png)
 
 ![CloudWatch Log CloudFormation Create](CloudWatchLogCreateCleaned.png)
 
@@ -195,7 +195,7 @@ Assuming the Lambda Functions are identical between *In-Line* and *On S3 Bucket*
 }
 ```
 
-![CloudWatch LogGroups CloudFormation Delete](CloudWatchLogGroupsDelete.png)
+![CloudWatch LogGroups CloudFormation Delete](CloudWatchLogGroupsDeleteCleaned.png)
 
 ![CloudWatch Log CloudFormation Delete](CloudWatchLogDeleteRequestCleaned.png)
 
