@@ -387,7 +387,7 @@ CloudFormation Delete Request details from CloudFormation Stack to Lambda Functi
 }
 ```
 
-Respond from Lambda Function back to CloudFormation Stack, up on the CloudFormation Delete Request.
+Respond from Lambda Function back to CloudFormation Stack, upon the CloudFormation Delete Request.
 
 ![CloudWatch Log Delete Result](CloudWatchLogDeleteResultCleaned.png)
 
@@ -405,7 +405,7 @@ Respond from Lambda Function back to CloudFormation Stack, up on the CloudFormat
 }
 ```
 
-The headers information of the respond from Lambda Function back to CloudFormation Stack up on the CloudFormation Delete Request.
+The headers information of the respond from Lambda Function back to CloudFormation Stack upon the CloudFormation Delete Request.
 
 ![CloudWatch Log Delete Header](CloudWatchLogDeleteHeader.png)
 
