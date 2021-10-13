@@ -433,15 +433,18 @@ The headers information of the respond from Lambda Function back to CloudFormati
 
 Once Lambda needs to interact with the external world (i.e. anything which is not part of AWS Services), you will need to connect / equip the Lamda Function with networking which can reach to the destination.
 This means you need to create VPC, SubNets, Route Tables, NACLs, Security Group, etc. the details can be seen on the [RandomWordCF.json](RandomWordCF.json) .
+
 A few key notes which are applicable up to the date of this document writing:
-- [ ]
-You will need to connect the Lambda Function to a Security Group and a SubNet.
+
+- [ ] You will need to connect the Lambda Function to a Security Group and a SubNet.
+
 ```
     "VpcConfig": {
      "SecurityGroupIds" : [ { "Ref": "NodesSecurityGroup" } ],
      "SubnetIds" : [ { "Ref": "NodesSubnet" } ]
     },
 ```
+
 At the back, AWS will Create a Network Interface for the Lambda Function, and apply the Security Group and the SubNet to that Network Interface.
 This AWS Created Network Interface however, up to the moment of this document writing, is still very glitchy / buggy, that it causes the CloudFormation Stack very hard and takes very long time to be Deleted.
 You also need to take care the routing and NACL of the traffic from / to Lambda Function, through your VPC's networking.
@@ -449,8 +452,9 @@ For example on the [RandomWordCF.json](RandomWordCF.json), the Lambda Function n
 As there is no *direct* way to allocate Public IP to the AWS Created Network Interface, traffic from Lambda Function needs to be NAT-ed using a NAT Gateway.
 And using a NAT Gateway in straight forward manner requires Private SubNet and Public SubNet.
 Which is why the CloudFormation in [RandomWordCF.json](RandomWordCF.json) contains so much more components to support Lambda Function to communicate with the External API.
-- [ ]
-Function calls on Node.JS are natively Asynchronous.
+
+- [ ] Function calls on Node.JS are natively Asynchronous.
+
 Which means the main process just pass the parameter of the call to the called function (e.g. value, variable, handle to an object or even handle to a function), and then go on with processing the next command without waiting for the called function to finish.
 When comparing the duration required to call External API Service in the Internet, and duration to complete the whole set of commands within the Lambda Function itself (or within AWS Services set), the main process always finish before getting any response from the External API.
 When the response from External API is crucial, this becomes an issue (such as the example in [RandomWord.js](RandomWord.js), where the whole point of Lambda Function is to obtain the result from External API).
