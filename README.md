@@ -1,6 +1,7 @@
 # AWS Lambda within AWS CloudFormation
 
-This Repository is only a collection of some notes of a learning journey on how to do AWS Lambda Function from within AWS CloudFormation Stack/Template.
+This Repository is a collection of some notes of a learning journey on how to do AWS Lambda Function from within AWS CloudFormation Stack/Template.
+Most of the learning item notes are accompanied with working sample code.
 
 <br>
 
@@ -14,7 +15,8 @@ This Repository covers only the Skeleton of how to :
 - [ ] Transfer information/input from CloudFormation to Lambda,
 - [ ] Transfer information/output from Lambda to CloudFormation,
 - [ ] Glue both CloudFormation and Lambda together,
-- [ ] Using only NodeJS as the language at the Lambda Function.
+- [ ] Using only NodeJS as the language at the Lambda Function,
+- [ ] Call External API Service (example: on the Internet).
 
 <br>
 
