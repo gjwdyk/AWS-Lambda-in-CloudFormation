@@ -441,7 +441,7 @@ A few key notes which are applicable up to the date of this document writing:
      "SubnetIds" : [ { "Ref": "NodesSubnet" } ]
     },
 ```
-At the back, AWS will Create a Network Interface for the Lambda Function, and apply the Security Group and the SubNet to that Network Interface.
+      At the back, AWS will Create a Network Interface for the Lambda Function, and apply the Security Group and the SubNet to that Network Interface.
 This AWS Created Network Interface however, up to the moment of this document writing, is still very glitchy / buggy, that it causes the CloudFormation Stack very hard and takes very long time to be Deleted.
 You also need to take care the routing and NACL of the traffic from / to Lambda Function, through your VPC's networking.
 For example on the [RandomWordCF.json](RandomWordCF.json), the Lambda Function needs to make an External API Call to a service in the Internet.
