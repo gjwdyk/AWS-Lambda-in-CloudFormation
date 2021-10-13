@@ -479,7 +479,7 @@ The first one is the log of External API Call, from Lambda to a Service in the I
 
 From the screen capture it was shown that the External API Call came back with a random word result : `["billons"]` .
 
-The second screen capture is the log of the Lambda response back to CloudFormation, returning the random word result it obtained from the External API Call.
+The second screen capture is the log of the Lambda response back to CloudFormation, returning the random word result it obtained from the External API Call (with the excess brackets and quotation-marks removed).
 
 ![RandomWord Lambda's Response to CloudFormation](RandomWordLambdaResponseCleaned.png)
 
