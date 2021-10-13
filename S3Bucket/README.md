@@ -466,6 +466,7 @@ In the example [RandomWord.js](RandomWord.js) a delay were added into the main p
 ```
 
 This approach is NOT the best approach, but it is the simplest one with some trade-off, where the main process in most cases wait excessively too long, as the configured timeout duration needs to cater cases where the respond comes a bit later than usual.
+For this simple example, where the Lambda Function is needed only during CloudFormation Stack Creation (which is already takes a lot of time), the constant wait period of Lambda Function is quite negligible, and therefore fits into the purpose.
 
 
 
