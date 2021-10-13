@@ -435,21 +435,19 @@ Once Lambda needs to interact with the external world (i.e. anything which is no
 This means you need to create VPC, SubNets, Route Tables, NACLs, Security Group, etc. the details can be seen on the [RandomWordCF.json](RandomWordCF.json) .
 A few key notes which are applicable up to the date of this document writing:
 - [ ] You will need to connect the Lambda Function to a Security Group and a SubNet.
-      At the back, AWS will Create a Network Interface for the Lambda Function, and apply the Security Group and the SubNet to that Network Interface.
-      This AWS Created Network Interface however, up to the moment of this document writing, is still very glitchy / buggy, that it causes the CloudFormation Stack very hard and takes very long time to be Deleted.
-
-      You also need to take care the routing and NACL of the traffic from / to Lambda Function, through your VPC's networking.
-      For example on the [RandomWordCF.json](RandomWordCF.json), the Lambda Function needs to make an External API Call to a service in the Internet.
-      As there is no *direct* way to allocate Public IP to the AWS Created Network Interface, traffic from Lambda Function needs to be NAT-ed using a NAT Gateway.
-      And using a NAT Gateway in straight forward manner requires Private SubNet and Public SubNet.
-      Which is why the CloudFormation in [RandomWordCF.json](RandomWordCF.json) contains so much more components to support Lambda Function to communicate with the External API.
-
 ```
     "VpcConfig": {
      "SecurityGroupIds" : [ { "Ref": "NodesSecurityGroup" } ],
      "SubnetIds" : [ { "Ref": "NodesSubnet" } ]
     },
 ```
+At the back, AWS will Create a Network Interface for the Lambda Function, and apply the Security Group and the SubNet to that Network Interface.
+This AWS Created Network Interface however, up to the moment of this document writing, is still very glitchy / buggy, that it causes the CloudFormation Stack very hard and takes very long time to be Deleted.
+You also need to take care the routing and NACL of the traffic from / to Lambda Function, through your VPC's networking.
+For example on the [RandomWordCF.json](RandomWordCF.json), the Lambda Function needs to make an External API Call to a service in the Internet.
+As there is no *direct* way to allocate Public IP to the AWS Created Network Interface, traffic from Lambda Function needs to be NAT-ed using a NAT Gateway.
+And using a NAT Gateway in straight forward manner requires Private SubNet and Public SubNet.
+Which is why the CloudFormation in [RandomWordCF.json](RandomWordCF.json) contains so much more components to support Lambda Function to communicate with the External API.
 
 
 
