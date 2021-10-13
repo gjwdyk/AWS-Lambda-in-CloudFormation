@@ -469,7 +469,18 @@ This approach is NOT the best approach, but it is the simplest one with some tra
 
 
 
+### Visuals
+
+To describe the [RandomWordCF.json](RandomWordCF.json) and [RandomWord.js](RandomWord.js) example better, below are some screen captures from the Lambda's CloudWatch Log.
+
+The first one is the log of External API Call, from Lambda to a Service in the Internet, to obtain a simple random word.
+
 ![External API Call to Obtain a Random Word](RandomWordExternalAPICall.png)
+
+From the screen capture it was shown that the External API Call came back with a random word result : `["billons"]` .
+
+The second screen capture
+
 
 ![RandomWord Lambda's Response to CloudFormation](RandomWordLambdaResponseCleaned.png)
 
