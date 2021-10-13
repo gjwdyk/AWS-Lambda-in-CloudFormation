@@ -448,8 +448,12 @@ For example on the [RandomWordCF.json](RandomWordCF.json), the Lambda Function n
 As there is no *direct* way to allocate Public IP to the AWS Created Network Interface, traffic from Lambda Function needs to be NAT-ed using a NAT Gateway.
 And using a NAT Gateway in straight forward manner requires Private SubNet and Public SubNet.
 Which is why the CloudFormation in [RandomWordCF.json](RandomWordCF.json) contains so much more components to support Lambda Function to communicate with the External API.
-
-
+- [ ] Function calls on Node.JS are natively Asynchronous.
+Which means the main process just pass the parameter of the call to the called function (e.g. value, variable, handle to an object or even handle to a function), and then go on with processing the next command without waiting for the called function to finish.
+When comparing the duration required to call External API Service in the Internet, and duration to complete the whole set of commands within the Lambda Function itself (or within AWS Services set), the main process always finish before getting any response from the External API.
+When the response from External API is crucial, this becomes an issue (such as the example in [RandomWord.js](RandomWord.js), where the whole point of Lambda Function is to obtain the result from External API).
+Therefore timing, order of execution or transformation from asynchronous into synchronous can be crucial depending on the design goal of the Lambda Function.
+In the example [RandomWord.js](RandomWord.js) a delay were added into the main process, so the External API call have a chance to come back with a result, which then the main process can return to CloudFormation Stack.
 
 
 
