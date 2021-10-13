@@ -455,15 +455,30 @@ Which is why the CloudFormation in [RandomWordCF.json](RandomWordCF.json) contai
 
 - [ ] Function calls on Node.JS are natively Asynchronous.
 
-```
-  setTimeout(function () { sendResponse(event, context, responseStatus, responseData) }, 4444);
-```
-
 Which means the main process just pass the parameter of the call to the called function (e.g. value, variable, handle to an object or even handle to a function), and then go on with processing the next command without waiting for the called function to finish.
 When comparing the duration required to call External API Service in the Internet, and duration to complete the whole set of commands within the Lambda Function itself (or within AWS Services set), the main process always finish before getting any response from the External API.
 When the response from External API is crucial, this becomes an issue (such as the example in [RandomWord.js](RandomWord.js), where the whole point of Lambda Function is to obtain the result from External API).
 Therefore timing, order of execution or transformation from asynchronous into synchronous can be crucial depending on the design goal of the Lambda Function.
 In the example [RandomWord.js](RandomWord.js) a delay were added into the main process, so the External API call have a chance to come back with a result, which then the main process can return to CloudFormation Stack.
+
+```
+  setTimeout(function () { sendResponse(event, context, responseStatus, responseData) }, 4444);
+```
+
+This approach is NOT the best approach, but it is the simplest one with some trade-off, where the main process in most cases wait excessively too long, as the configured timeout duration needs to cater cases where the respond comes a bit later than usual.
+
+
+
+![External API Call to Obtain a Random Word](RandomWordExternalAPICall.png)
+
+![RandomWord Lambda's Response to CloudFormation](RandomWordLambdaResponseCleaned.png)
+
+
+
+
+
+
+
 
 
 
