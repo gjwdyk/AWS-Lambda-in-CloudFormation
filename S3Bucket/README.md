@@ -561,13 +561,16 @@ With the re-arrangement of the Node.js code, where the follow up function call i
 
 ![CloudWatch Log Create Response RandomWordCB](CloudWatchLogCreateResponseRandomWordCB.png)
 
+![CloudFormation Outputs RandomWordCB](CloudFormationOutputsRandomWordCB.png)
+
+
+
 ![CloudWatch Log Post External API Call RandomWordCB](CloudWatchLogPostExternalAPICallRandomWordCB.png)
 
 ![CloudWatch Log Error Response RandomWordCB](CloudWatchLogErrorResponseRandomWordCB.png)
 
 ![CloudWatch Log Delete Response RandomWordCB](CloudWatchLogDeleteResponseRandomWordCB.png)
 
-![CloudFormation Outputs RandomWordCB](CloudFormationOutputsRandomWordCB.png)
 
 
 
