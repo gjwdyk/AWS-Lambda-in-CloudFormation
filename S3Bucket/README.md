@@ -484,9 +484,21 @@ The second screen capture is the log of the Lambda response back to CloudFormati
 
 ![RandomWord Lambda's Response to CloudFormation](RandomWordLambdaResponseCleaned.png)
 
-Below screen capture shows that the random word result `billons` were propagated to the CloudFormation.
+Below CloudFormation's Outputs screen capture shows that the random word result `billons` were propagated to the CloudFormation.
 
 ![CloudFormation's Outputs with Result.png](CloudFormationOutputsResult.png)
+
+
+
+***
+
+## Node.JS CallBack Function
+
+[RandomWordCB.js](RandomWordCB.js) example (and its companion [RandomWordCB.json](RandomWordCB.json)) arranges the code so that the function call to return the resulting random word were inserted within the External API Call Back Function, thus ensuring in that position an answer / result is available.
+
+
+
+
 
 
 
