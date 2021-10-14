@@ -488,6 +488,35 @@ Below CloudFormation's Outputs screen capture shows that the random word result 
 
 ![CloudFormation's Outputs with Result.png](CloudFormationOutputsResult.png)
 
+Below screen capture shows a sample of CloudWatch Log's TimeStamp:
+
+![CloudWatch Log's TimeStamp](CloudWatchLogTimeStamp.png)
+
+```
+2021-10-13T14:28:06.989+07:00	START RequestId: 6fab0c37-18b9-47a0-9bb2-c5d3c3c53bf6 Version: $LATEST
+2021-10-13T14:28:06.991+07:00	2021-10-13T07:28:06.991Z 6fab0c37-18b9-47a0-9bb2-c5d3c3c53bf6 INFO Request Received: {"RequestType":"Create","ServiceToken":"arn:aws:lambda:ap-southeast-1:000000000000:function:Random
+2021-10-13T14:28:07.131+07:00	2021-10-13T07:28:07.130Z 6fab0c37-18b9-47a0-9bb2-c5d3c3c53bf6 INFO External API Call Attempt for Random Word: {"hostname":"random-word-api.herokuapp.com","port":443,"path":"/word?numb
+2021-10-13T14:28:08.216+07:00	2021-10-13T07:28:08.216Z 6fab0c37-18b9-47a0-9bb2-c5d3c3c53bf6 INFO External API Call Attempt Status Code: 200
+2021-10-13T14:28:08.216+07:00	2021-10-13T07:28:08.216Z 6fab0c37-18b9-47a0-9bb2-c5d3c3c53bf6 INFO External API Call Attempt Response Headers: {"server":"Cowboy","connection":"close","access-control-allow-origin":"*
+2021-10-13T14:28:08.232+07:00	2021-10-13T07:28:08.231Z 6fab0c37-18b9-47a0-9bb2-c5d3c3c53bf6 INFO ["billons"]
+2021-10-13T14:28:11.840+07:00	2021-10-13T07:28:11.840Z 6fab0c37-18b9-47a0-9bb2-c5d3c3c53bf6 INFO Composed Response Body: {"Status":"SUCCESS","Reason":"Refer the Reason's Details at CloudWatch Log Stream: 2021/10/1
+2021-10-13T14:28:11.850+07:00	2021-10-13T07:28:11.850Z 6fab0c37-18b9-47a0-9bb2-c5d3c3c53bf6 INFO Sending Response . . .
+2021-10-13T14:28:11.945+07:00	2021-10-13T07:28:11.945Z 6fab0c37-18b9-47a0-9bb2-c5d3c3c53bf6 INFO Status Code: 200
+2021-10-13T14:28:11.945+07:00	2021-10-13T07:28:11.945Z 6fab0c37-18b9-47a0-9bb2-c5d3c3c53bf6 INFO Headers: {"x-amz-id-2":"EzS0GfkOLMZsqEiI2wyN/uWTeC0eisperVmlgIxGBry4Q0iq4PyCndj9WatXiVnAi09ej/NfQfE=","x-amz-request
+2021-10-13T14:28:11.948+07:00	END RequestId: 6fab0c37-18b9-47a0-9bb2-c5d3c3c53bf6
+2021-10-13T14:28:11.948+07:00	REPORT RequestId: 6fab0c37-18b9-47a0-9bb2-c5d3c3c53bf6 Duration: 4957.81 ms Billed Duration: 4958 ms Memory Size: 128 MB Max Memory Used: 57 MB Init Duration: 152.74 ms
+```
+
+Notice the delay introduced between :
+```
+2021-10-13T14:28:08.232+07:00	2021-10-13T07:28:08.231Z 6fab0c37-18b9-47a0-9bb2-c5d3c3c53bf6 INFO ["billons"]
+```
+and
+```
+2021-10-13T14:28:11.840+07:00	2021-10-13T07:28:11.840Z 6fab0c37-18b9-47a0-9bb2-c5d3c3c53bf6 INFO Composed Response Body: {"Status":"SUCCESS","Reason":"Refer the Reason's Details at CloudWatch Log Stream: 2021/10/1
+```
+which resulted due to the `setTimeout` function.
+
 
 
 ***
@@ -499,6 +528,21 @@ Below CloudFormation's Outputs screen capture shows that the random word result 
 
 
 
+
+```
+2021-10-14T14:35:49.775+07:00	START RequestId: cd1429de-1e70-49df-af4c-3d7c9690c11f Version: $LATEST
+2021-10-14T14:35:49.788+07:00	2021-10-14T07:35:49.788Z cd1429de-1e70-49df-af4c-3d7c9690c11f INFO Request Received: {"RequestType":"Create","ServiceToken":"arn:aws:lambda:ap-southeast-1:000000000000:function:Random
+2021-10-14T14:35:49.948+07:00	2021-10-14T07:35:49.929Z cd1429de-1e70-49df-af4c-3d7c9690c11f INFO External API Call Attempt for Random Word: {"hostname":"random-word-api.herokuapp.com","port":443,"path":"/word?numb
+2021-10-14T14:35:51.039+07:00	2021-10-14T07:35:51.039Z cd1429de-1e70-49df-af4c-3d7c9690c11f INFO External API Call Attempt Status Code: 200
+2021-10-14T14:35:51.039+07:00	2021-10-14T07:35:51.039Z cd1429de-1e70-49df-af4c-3d7c9690c11f INFO External API Call Attempt Response Headers: {"server":"Cowboy","connection":"close","access-control-allow-origin":"*
+2021-10-14T14:35:51.050+07:00	2021-10-14T07:35:51.050Z cd1429de-1e70-49df-af4c-3d7c9690c11f INFO ["technicalize"]
+2021-10-14T14:35:51.050+07:00	2021-10-14T07:35:51.050Z cd1429de-1e70-49df-af4c-3d7c9690c11f INFO Composed Response Body: {"Status":"SUCCESS","Reason":"Refer the Reason's Details at CloudWatch Log Stream: 2021/10/1
+2021-10-14T14:35:51.089+07:00	2021-10-14T07:35:51.089Z cd1429de-1e70-49df-af4c-3d7c9690c11f INFO Sending Response . . .
+2021-10-14T14:35:51.205+07:00	2021-10-14T07:35:51.205Z cd1429de-1e70-49df-af4c-3d7c9690c11f INFO Status Code: 200
+2021-10-14T14:35:51.205+07:00	2021-10-14T07:35:51.205Z cd1429de-1e70-49df-af4c-3d7c9690c11f INFO Headers: {"x-amz-id-2":"4XZp5j56eQRp5+5E1ChSwY1OA725I2VUQDURDT7xoSHrtGpZeQbQMJmElsQN4cr8aJMgrPJn/bs=","x-amz-request
+2021-10-14T14:35:51.207+07:00	END RequestId: cd1429de-1e70-49df-af4c-3d7c9690c11f
+2021-10-14T14:35:51.207+07:00	REPORT RequestId: cd1429de-1e70-49df-af4c-3d7c9690c11f Duration: 1431.76 ms Billed Duration: 1432 ms Memory Size: 128 MB Max Memory Used: 57 MB Init Duration: 148.09 ms
+```
 
 
 
