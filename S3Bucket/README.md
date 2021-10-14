@@ -466,7 +466,6 @@ In the example [RandomWord.js](RandomWord.js) a delay were added into the main p
 ```
 
 This approach is NOT the best approach, but it is the simplest one with some trade-off, where the main process in most cases wait excessively too long, as the configured timeout duration needs to cater cases where the respond comes a bit later than usual.
-For this simple example, where the Lambda Function is needed only during CloudFormation Stack Creation (which already takes a lot of time), the constant wait period of Lambda Function is quite negligible, and therefore fits into the purpose.
 
 
 
@@ -525,9 +524,22 @@ which resulted due to the `setTimeout` function.
 
 [RandomWordCB.js](RandomWordCB.js) example (and its companion [RandomWordCB.json](RandomWordCB.json)) arranges the code so that the function call to return the resulting random word were inserted within the External API Call Back Function, thus ensuring in that position an answer / result is available.
 
+```
+      response.on('end', function() {
+        console.log(body);
+        var resultRandomWord = body.substring( ( body.indexOf('\"') + 1 ), body.lastIndexOf('\"') );
+        responseStatus = 'SUCCESS';
+        responseData['Reason'] = 'Call to Generate Random Word';
+        responseData['Result'] = resultRandomWord;
+        sendResponse(event, context, responseStatus, responseData);
+      });
+```
 
+[RandomWordCB.js](RandomWordCB.js) example also cater the probability that the External API may return `Status Code` other than `200` .
 
+With the re-arrangement of the Node.js code, where the follow up function call is inserted at the call back of the prerequisite function, it eliminates the need of fixed timeout waiting / delay.
 
+![CloudWatch Log's TimeStamp RandomWordCB](CloudWatchLogTimeStampRandomWordCB.png)
 
 ```
 2021-10-14T14:35:49.775+07:00	START RequestId: cd1429de-1e70-49df-af4c-3d7c9690c11f Version: $LATEST
@@ -543,6 +555,7 @@ which resulted due to the `setTimeout` function.
 2021-10-14T14:35:51.207+07:00	END RequestId: cd1429de-1e70-49df-af4c-3d7c9690c11f
 2021-10-14T14:35:51.207+07:00	REPORT RequestId: cd1429de-1e70-49df-af4c-3d7c9690c11f Duration: 1431.76 ms Billed Duration: 1432 ms Memory Size: 128 MB Max Memory Used: 57 MB Init Duration: 148.09 ms
 ```
+
 
 
 
