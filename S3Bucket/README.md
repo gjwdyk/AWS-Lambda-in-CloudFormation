@@ -587,7 +587,7 @@ Consequently when the External API responded with `Status Code` other than `200`
 
 ![CloudWatch Log Error Response RandomWordCB](CloudWatchLogErrorResponseRandomWordCB.png)
 
-And lastly, below are Lambda response back to CloudFormation, when receiving a CloudFormation Delete Request:
+And lastly, below is a Lambda sample response back to CloudFormation, when receiving a CloudFormation Delete Request:
 
 ![CloudWatch Log Delete Response RandomWordCB](CloudWatchLogDeleteResponseRandomWordCB.png)
 
