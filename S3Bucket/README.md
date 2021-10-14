@@ -484,6 +484,10 @@ The second screen capture is the log of the Lambda response back to CloudFormati
 
 ![RandomWord Lambda's Response to CloudFormation](RandomWordLambdaResponseCleaned.png)
 
+Below screen capture shows that the random word result `billons` were propagated to the CloudFormation.
+
+![CloudFormation's Outputs with Result.png](CloudFormationOutputsResult.png)
+
 
 
 ***
