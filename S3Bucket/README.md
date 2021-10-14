@@ -522,9 +522,15 @@ which resulted due to the `setTimeout` function.
 
 ## Node.JS CallBack Function
 
-[RandomWordCB.js](RandomWordCB.js) example (and its companion [RandomWordCB.json](RandomWordCB.json)) arranges the code so that the function call to return the resulting random word were inserted within the External API Call Back Function, thus ensuring in that position an answer / result is available.
+[RandomWordCB.js](RandomWordCB.js) example (and its companion [RandomWordCB.json](RandomWordCB.json)) arranges the code so that the function call to return the resulting random word were inserted within the External API Call Back Function, thus ensuring in that position and time an answer / result is available.
+[RandomWordCB.js](RandomWordCB.js) example also cater the probability that the External API may return `Status Code` other than `200` .
 
 ```
+    if (response.statusCode == '200') {
+      var body = '';
+      response.on('data', function(chunk) {
+        body += chunk;
+      });
       response.on('end', function() {
         console.log(body);
         var resultRandomWord = body.substring( ( body.indexOf('\"') + 1 ), body.lastIndexOf('\"') );
@@ -533,9 +539,11 @@ which resulted due to the `setTimeout` function.
         responseData['Result'] = resultRandomWord;
         sendResponse(event, context, responseStatus, responseData);
       });
+    } else {
+      responseData['Reason'] = 'External API Call Attempt Status Code: ' + response.statusCode;
+      sendResponse(event, context, responseStatus, responseData);
+    }
 ```
-
-[RandomWordCB.js](RandomWordCB.js) example also cater the probability that the External API may return `Status Code` other than `200` .
 
 With the re-arrangement of the Node.js code, where the follow up function call is inserted at the call back of the prerequisite function, it eliminates the need of fixed timeout waiting / delay.
 
