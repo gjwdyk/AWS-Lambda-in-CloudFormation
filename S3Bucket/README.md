@@ -564,18 +564,32 @@ With the re-arrangement of the Node.js code, where the follow up function call i
 2021-10-14T14:35:51.207+07:00	REPORT RequestId: cd1429de-1e70-49df-af4c-3d7c9690c11f Duration: 1431.76 ms Billed Duration: 1432 ms Memory Size: 128 MB Max Memory Used: 57 MB Init Duration: 148.09 ms
 ```
 
+Below are some screen captures of the CloudWatch Log as well as CloudFormation Outputs section.
+
+CloudWatch Log's screen capture of the External API Call:
 
 ![CloudWatch Log External API Call RandomWordCB](CloudWatchLogExternalAPICallRandomWordCB.png)
 
+CloudWatch Log's screen capture of Lambda's response back to CloudFormation Stack:
+
 ![CloudWatch Log Create Response RandomWordCB](CloudWatchLogCreateResponseRandomWordCB.png)
+
+CloudFormation Outputs screen capture showing the result random word at CloudFormation Stack:
 
 ![CloudFormation Outputs RandomWordCB](CloudFormationOutputsRandomWordCB.png)
 
-
+For the case that External API responded with `Status Code` other than `200`, we simulate an error by using POST method instead of GET method:
 
 ![CloudWatch Log Post External API Call RandomWordCB](CloudWatchLogPostExternalAPICallRandomWordCB.png)
 
+
+
+
 ![CloudWatch Log Error Response RandomWordCB](CloudWatchLogErrorResponseRandomWordCB.png)
+
+
+
+
 
 ![CloudWatch Log Delete Response RandomWordCB](CloudWatchLogDeleteResponseRandomWordCB.png)
 
