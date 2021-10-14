@@ -578,41 +578,18 @@ CloudFormation Outputs screen capture showing the result random word at CloudFor
 
 ![CloudFormation Outputs RandomWordCB](CloudFormationOutputsRandomWordCB.png)
 
-For the case that External API responded with `Status Code` other than `200`, we simulate an error by using POST method instead of GET method:
+For the case that External API responded with `Status Code` other than `200`, we simulate an error by using POST method instead of GET method.
+Screen capture below shows that the External API responded with `404` when receiving request with POST method.
 
 ![CloudWatch Log Post External API Call RandomWordCB](CloudWatchLogPostExternalAPICallRandomWordCB.png)
 
-
-
+Consequently when the External API responded with `Status Code` other than `200`, Lambda propagate that respond to CloudFormation accordingly:
 
 ![CloudWatch Log Error Response RandomWordCB](CloudWatchLogErrorResponseRandomWordCB.png)
 
-
-
-
+And lastly, below are Lambda response back to CloudFormation, when receiving a CloudFormation Delete Request:
 
 ![CloudWatch Log Delete Response RandomWordCB](CloudWatchLogDeleteResponseRandomWordCB.png)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
