@@ -360,7 +360,7 @@
     "GroupDescription": "Security Group for Nodes",
     "VpcId": { "Ref": "VPC" },
     "SecurityGroupEgress": [ { "IpProtocol": "-1", "CidrIp": "0.0.0.0/0" } ],
-    "SecurityGroupIngress": [ { "IpProtocol": "-1", "CidrIp": "0.0.0.0/0" } ],
+    "SecurityGroupIngress": [ { } ],
     "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "NodesSecurityGroup" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
    }
   },
