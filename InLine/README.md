@@ -264,10 +264,8 @@ Below is a log containing the response from Lambda Function back to CloudFormati
 
 ## External API Call from within Lambda Function (An Example Code)
 
-[RandomWord.json](RandomWord.json) contains an example code identical to [Random Word Example](../S3Bucket#nodejs-callback-function), with a slight difference that [RandomWord.json](RandomWord.json) has the Lambda Function is InLine within the CloudFormation Template.
-
-
-
+[RandomWord.json](RandomWord.json) contains an example code identical to the example on [Node.JS CallBack Function](../S3Bucket#nodejs-callback-function) section, with a slight difference that [RandomWord.json](RandomWord.json) has the Lambda Function InLine within the CloudFormation Template.
+Kindly refer to [Node.JS CallBack Function](../S3Bucket#nodejs-callback-function) section for more detail explanations on the example.
 
 
 
