@@ -1,0 +1,650 @@
+{
+ "AWSTemplateFormatVersion": "2010-09-09",
+ "Description": "Lambda Function creation within CloudFormation Template",
+
+ "Mappings": {
+  "IPAddress": {
+   "VPC": {
+    "PreFix": "10.1"
+   },
+   "Nodes": {
+    "InFix": "10"
+   },
+   "Gateway": {
+    "InFix": "1"
+   }
+  }
+ },
+
+ "Parameters": {
+  "TagPreFix": {
+   "Type": "String",
+   "Default": "CF",
+   "AllowedPattern": "^[a-zA-Z][0-9a-zA-Z]*$",
+   "ConstraintDescription": "Kindly check the TagPreFix parameter input. Only Alphanumeric characters allowed.",
+   "Description": "Prefix to be given to all possible resources created by this stack-template."
+  },
+  "TagOwnerEmail": {
+   "Type": "String",
+   "Default": "john.doe@domain.tld",
+   "AllowedPattern": "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$",
+   "ConstraintDescription": "Kindly check the TagOwner parameter input to follow valid email address convention.",
+   "Description": "Tag which will be attached to all possible resources created by this stack-template."
+  },
+  "UserInput": {
+   "Description": "A User Input to the Lambda Function. Can be Safely Ignored for this Sample Template.",
+   "Default" : "Random User Input",
+   "Type": "String"
+  }
+ },
+
+ "Metadata": {
+  "AWS::CloudFormation::Interface": {
+   "ParameterGroups": [
+    {
+     "Label": {
+      "default": "CloudFormation Stack Tag Parameters"
+     },
+     "Parameters": [
+      "TagPreFix",
+      "TagOwnerEmail"
+     ]
+    },
+    {
+     "Label": {
+      "default": "Other Parameters"
+     },
+     "Parameters": [
+      "UserInput"
+     ]
+    }
+   ],
+   "ParameterLabels": {
+    "TagPreFix": {
+     "default": "PreFix for Name Tags"
+    },
+    "TagOwnerEmail": {
+     "default": "Email Address of the Owner of all resources created by this CloudFormation Stack"
+    },
+    "UserInput": {
+     "default": "User's Input"
+    }
+   }
+  }
+ },
+
+ "Resources": {
+  "VPC": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "EnableDnsSupport": "true",
+    "EnableDnsHostnames": "true",
+    "CidrBlock": { "Fn::Join": [ ".", [ { "Fn::FindInMap": [ "IPAddress", "VPC", "PreFix" ] }, "0.0/16" ] ] },
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "VPC" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  },
+  "FlowLog": {
+   "Type": "AWS::EC2::FlowLog",
+   "DependsOn": [ "VPC" , "FlowLogRole" ],
+   "Properties": {
+    "DeliverLogsPermissionArn": {
+     "Fn::GetAtt": [
+      "FlowLogRole",
+      "Arn"
+     ]
+    },
+    "LogGroupName": "FlowLogGroup",
+    "ResourceId": {
+     "Ref": "VPC"
+    },
+    "ResourceType": "VPC",
+    "TrafficType": "ALL"
+   }
+  },
+  "FlowLogRole": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "vpc-flow-logs.amazonaws.com"
+        ]
+       },
+       "Action": [
+        "sts:AssumeRole"
+       ]
+      }
+     ]
+    },
+    "Policies": [
+     {
+      "PolicyName": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "FlowLogPolicy" ] ] },
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:DescribeLogGroups",
+          "logs:DescribeLogStreams",
+          "ec2:DescribeSecurityGroups",
+          "ec2:DescribeSubnets",
+          "ec2:DescribeVpcs"
+         ],
+         "Resource": "*"
+        }
+       ]
+      }
+     }
+    ],
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "FlowLogRole" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  },
+  "NodesSubnet": {
+   "Type": "AWS::EC2::Subnet",
+   "DependsOn": [ "VPC" ],
+   "Properties": {
+    "VpcId": { "Ref": "VPC" },
+    "AvailabilityZone": { "Fn::Select": [ "0", { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+    "MapPublicIpOnLaunch": "true",
+    "CidrBlock": { "Fn::Join": [ ".", [ { "Fn::FindInMap": [ "IPAddress", "VPC", "PreFix" ] }, { "Fn::FindInMap": [ "IPAddress", "Nodes", "InFix" ] }, "0/24" ] ] },
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "NodesSubnet" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  },
+  "GatewaySubnet": {
+   "Type": "AWS::EC2::Subnet",
+   "DependsOn": [ "VPC" ],
+   "Properties": {
+    "VpcId": { "Ref": "VPC" },
+    "AvailabilityZone": { "Fn::Select": [ "0", { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+    "MapPublicIpOnLaunch": "true",
+    "CidrBlock": { "Fn::Join": [ ".", [ { "Fn::FindInMap": [ "IPAddress", "VPC", "PreFix" ] }, { "Fn::FindInMap": [ "IPAddress", "Gateway", "InFix" ] }, "0/24" ] ] },
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "GatewaySubnet" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  },
+  "InternetGateway": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "InternetGateway" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  },
+  "VPCGatewayAttachment": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "DependsOn": [ "VPC", "InternetGateway" ],
+   "Properties": {
+    "VpcId": { "Ref": "VPC" },
+    "InternetGatewayId": { "Ref": "InternetGateway" }
+   }
+  },
+  "NATGatewayEIP": {
+   "Type": "AWS::EC2::EIP",
+   "DependsOn": [ "VPC" , "VPCGatewayAttachment" ],
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "NATGatewayEIP" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  },
+  "NATGateway" : {
+   "Type" : "AWS::EC2::NatGateway",
+   "DependsOn": [ "NATGatewayEIP", "NodesSubnet" ],
+   "Properties" : {
+    "AllocationId" : { "Fn::GetAtt" : [ "NATGatewayEIP", "AllocationId" ] },
+    "SubnetId" : { "Ref" : "GatewaySubnet" },
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "NATGateway" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  },
+  "NodesRouteTable": {
+   "Type": "AWS::EC2::RouteTable",
+   "DependsOn": [ "VPC" ],
+   "Properties": {
+    "VpcId": { "Ref": "VPC" },
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "NodesRouteTable" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  },
+  "NodesRoute": {
+   "Type": "AWS::EC2::Route",
+   "DependsOn": [ "NodesRouteTable", "NATGateway" , "VPCGatewayAttachment" ],
+   "Properties": {
+    "RouteTableId": { "Ref": "NodesRouteTable" },
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId" : { "Ref" : "NATGateway" }
+   }
+  },
+  "NodesSubnetRouteTableAssociation": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "DependsOn": [ "NodesSubnet", "NodesRouteTable" ],
+   "Properties": {
+    "SubnetId": { "Ref": "NodesSubnet" },
+    "RouteTableId": { "Ref": "NodesRouteTable" }
+   }
+  },
+  "NodesNetworkAcL": {
+   "Type": "AWS::EC2::NetworkAcl",
+   "DependsOn": [ "VPC" ],
+   "Properties": {
+    "VpcId": { "Ref": "VPC" },
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "NodesNetworkAcL" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  },
+  "InboundTCPNodesNetworkAcLEntry": {
+   "Type": "AWS::EC2::NetworkAclEntry",
+   "DependsOn": [ "NodesNetworkAcL" ],
+   "Properties": {
+    "NetworkAclId": { "Ref": "NodesNetworkAcL" },
+    "RuleNumber": "100",
+    "Protocol": "6",
+    "RuleAction": "allow",
+    "Egress": "false",
+    "CidrBlock": "0.0.0.0/0",
+    "PortRange": { "From": "0", "To": "65535" }
+   }
+  },
+  "InboundUDPNodesNetworkAcLEntry": {
+   "Type": "AWS::EC2::NetworkAclEntry",
+   "DependsOn": [ "NodesNetworkAcL" ],
+   "Properties": {
+    "NetworkAclId": { "Ref": "NodesNetworkAcL" },
+    "RuleNumber": "200",
+    "Protocol": "17",
+    "RuleAction": "allow",
+    "Egress": "false",
+    "CidrBlock": "0.0.0.0/0",
+    "PortRange": { "From": "0", "To": "65535" }
+   }
+  },
+  "InboundICMPNodesNetworkAcLEntry": {
+   "Type": "AWS::EC2::NetworkAclEntry",
+   "DependsOn": [ "NodesNetworkAcL" ],
+   "Properties": {
+    "NetworkAclId": { "Ref": "NodesNetworkAcL" },
+    "RuleNumber": "300",
+    "Protocol": "1",
+    "Icmp": { "Code": "-1", "Type": "-1" },
+    "RuleAction": "allow",
+    "Egress": "false",
+    "CidrBlock": "0.0.0.0/0"
+   }
+  },
+  "OutboundTCPNodesNetworkAcLEntry": {
+   "Type": "AWS::EC2::NetworkAclEntry",
+   "DependsOn": [ "NodesNetworkAcL" ],
+   "Properties": {
+    "NetworkAclId": { "Ref": "NodesNetworkAcL" },
+    "RuleNumber": "100",
+    "Protocol": "6",
+    "RuleAction": "allow",
+    "Egress": "true",
+    "CidrBlock": "0.0.0.0/0",
+    "PortRange": { "From": "0", "To": "65535" }
+   }
+  },
+  "OutboundUDPNodesNetworkAcLEntry": {
+   "Type": "AWS::EC2::NetworkAclEntry",
+   "DependsOn": [ "NodesNetworkAcL" ],
+   "Properties": {
+    "NetworkAclId": { "Ref": "NodesNetworkAcL" },
+    "RuleNumber": "200",
+    "Protocol": "17",
+    "RuleAction": "allow",
+    "Egress": "true",
+    "CidrBlock": "0.0.0.0/0",
+    "PortRange": { "From": "0", "To": "65535" }
+   }
+  },
+  "OutboundICMPNodesNetworkAcLEntry": {
+   "Type": "AWS::EC2::NetworkAclEntry",
+   "DependsOn": [ "NodesNetworkAcL" ],
+   "Properties": {
+    "NetworkAclId": { "Ref": "NodesNetworkAcL" },
+    "RuleNumber": "300",
+    "Protocol": "1",
+    "Icmp": { "Code": "-1", "Type": "-1" },
+    "RuleAction": "allow",
+    "Egress": "true",
+    "CidrBlock": "0.0.0.0/0"
+   }
+  },
+  "NodesSubnetNetworkAcLAssociation": {
+   "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+   "DependsOn": [ "NodesSubnet", "NodesNetworkAcL" ],
+   "Properties": {
+    "SubnetId": { "Ref": "NodesSubnet" },
+    "NetworkAclId": { "Ref": "NodesNetworkAcL" }
+   }
+  },
+  "NodesSecurityGroup": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "DependsOn": [ "VPC" ],
+   "Properties": {
+    "GroupDescription": "Security Group for Nodes",
+    "VpcId": { "Ref": "VPC" },
+    "SecurityGroupEgress": [ { "IpProtocol": "-1", "CidrIp": "0.0.0.0/0" } ],
+    "SecurityGroupIngress": [ { } ],
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "NodesSecurityGroup" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  },
+  "GatewayRouteTable": {
+   "Type": "AWS::EC2::RouteTable",
+   "DependsOn": [ "VPC" ],
+   "Properties": {
+    "VpcId": { "Ref": "VPC" },
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "GatewayRouteTable" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  },
+  "GatewayRoute": {
+   "Type": "AWS::EC2::Route",
+   "DependsOn": [ "GatewayRouteTable", "NATGateway" , "VPCGatewayAttachment" ],
+   "Properties": {
+    "RouteTableId": { "Ref": "GatewayRouteTable" },
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": { "Ref": "InternetGateway" }
+   }
+  },
+  "GatewaySubnetRouteTableAssociation": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "DependsOn": [ "GatewaySubnet", "GatewayRouteTable" ],
+   "Properties": {
+    "SubnetId": { "Ref": "GatewaySubnet" },
+    "RouteTableId": { "Ref": "GatewayRouteTable" }
+   }
+  },
+  "GatewayNetworkAcL": {
+   "Type": "AWS::EC2::NetworkAcl",
+   "DependsOn": [ "VPC" ],
+   "Properties": {
+    "VpcId": { "Ref": "VPC" },
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "GatewayNetworkAcL" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  },
+  "InboundTCPGatewayNetworkAcLEntry": {
+   "Type": "AWS::EC2::NetworkAclEntry",
+   "DependsOn": [ "GatewayNetworkAcL" ],
+   "Properties": {
+    "NetworkAclId": { "Ref": "GatewayNetworkAcL" },
+    "RuleNumber": "100",
+    "Protocol": "6",
+    "RuleAction": "allow",
+    "Egress": "false",
+    "CidrBlock": "0.0.0.0/0",
+    "PortRange": { "From": "0", "To": "65535" }
+   }
+  },
+  "InboundUDPGatewayNetworkAcLEntry": {
+   "Type": "AWS::EC2::NetworkAclEntry",
+   "DependsOn": [ "GatewayNetworkAcL" ],
+   "Properties": {
+    "NetworkAclId": { "Ref": "GatewayNetworkAcL" },
+    "RuleNumber": "200",
+    "Protocol": "17",
+    "RuleAction": "allow",
+    "Egress": "false",
+    "CidrBlock": "0.0.0.0/0",
+    "PortRange": { "From": "0", "To": "65535" }
+   }
+  },
+  "InboundICMPGatewayNetworkAcLEntry": {
+   "Type": "AWS::EC2::NetworkAclEntry",
+   "DependsOn": [ "GatewayNetworkAcL" ],
+   "Properties": {
+    "NetworkAclId": { "Ref": "GatewayNetworkAcL" },
+    "RuleNumber": "300",
+    "Protocol": "1",
+    "Icmp": { "Code": "-1", "Type": "-1" },
+    "RuleAction": "allow",
+    "Egress": "false",
+    "CidrBlock": "0.0.0.0/0"
+   }
+  },
+  "OutboundTCPGatewayNetworkAcLEntry": {
+   "Type": "AWS::EC2::NetworkAclEntry",
+   "DependsOn": [ "GatewayNetworkAcL" ],
+   "Properties": {
+    "NetworkAclId": { "Ref": "GatewayNetworkAcL" },
+    "RuleNumber": "100",
+    "Protocol": "6",
+    "RuleAction": "allow",
+    "Egress": "true",
+    "CidrBlock": "0.0.0.0/0",
+    "PortRange": { "From": "0", "To": "65535" }
+   }
+  },
+  "OutboundUDPGatewayNetworkAcLEntry": {
+   "Type": "AWS::EC2::NetworkAclEntry",
+   "DependsOn": [ "GatewayNetworkAcL" ],
+   "Properties": {
+    "NetworkAclId": { "Ref": "GatewayNetworkAcL" },
+    "RuleNumber": "200",
+    "Protocol": "17",
+    "RuleAction": "allow",
+    "Egress": "true",
+    "CidrBlock": "0.0.0.0/0",
+    "PortRange": { "From": "0", "To": "65535" }
+   }
+  },
+  "OutboundICMPGatewayNetworkAcLEntry": {
+   "Type": "AWS::EC2::NetworkAclEntry",
+   "DependsOn": [ "GatewayNetworkAcL" ],
+   "Properties": {
+    "NetworkAclId": { "Ref": "GatewayNetworkAcL" },
+    "RuleNumber": "300",
+    "Protocol": "1",
+    "Icmp": { "Code": "-1", "Type": "-1" },
+    "RuleAction": "allow",
+    "Egress": "true",
+    "CidrBlock": "0.0.0.0/0"
+   }
+  },
+  "GatewaySubnetNetworkAcLAssociation": {
+   "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+   "DependsOn": [ "GatewaySubnet", "GatewayNetworkAcL" ],
+   "Properties": {
+    "SubnetId": { "Ref": "GatewaySubnet" },
+    "NetworkAclId": { "Ref": "GatewayNetworkAcL" }
+   }
+  },
+  "LambdaExecutionRole": {
+   "Type": "AWS::IAM::Role",
+   "DependsOn": [ "NodesSecurityGroup", "NodesSubnet" , "NodesRoute" , "FlowLog" ],
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "lambda.amazonaws.com"
+        ]
+       },
+       "Action": [
+        "sts:AssumeRole"
+       ]
+      }
+     ]
+    },
+    "Policies": [
+     {
+      "PolicyName": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "LambdaExecutionPolicy" ] ] },
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "ec2:CreateNetworkInterface",
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DeleteNetworkInterface",
+          "ec2:AssignPrivateIpAddresses",
+          "ec2:UnassignPrivateIpAddresses",
+          "ec2:DescribeSecurityGroups",
+          "ec2:DescribeSubnets",
+          "ec2:DescribeVpcs"
+         ],
+         "Resource": "*"
+        }
+       ]
+      }
+     }
+    ],
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "LambdaExecutionRole" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  },
+  "RandomWordInterface": {
+   "Type": "Custom::RandomWordInterface",
+   "DependsOn": [ "RandomWordFunction" ],
+   "Properties": {
+    "ServiceToken": { "Fn::GetAtt" : ["RandomWordFunction", "Arn"] },
+    "SystemInput": { "Ref": "AWS::Region" },
+    "UserInput": { "Ref": "UserInput" },
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "RandomWordInterface" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  },
+  "RandomWordFunction": {
+   "Type": "AWS::Lambda::Function",
+   "DependsOn": [ "LambdaExecutionRole", "NodesSecurityGroup", "NodesSubnet" , "NodesRoute" , "FlowLog" ],
+   "Properties": {
+    "Code": {
+     "ZipFile": {
+      "Fn::Join": [
+       "\n",
+       [
+        "exports.handler = function(event, context) {",
+        "  var responseData = {};",
+        "  responseData['Result'] = 'E-R-R-O-R';",
+        "  var responseStatus = 'FAILED';",
+        "  console.log('Request Received:\\n' + JSON.stringify(event));",
+        "  if (event.RequestType == 'Delete') {",
+        "    responseStatus = 'SUCCESS';",
+        "    responseData['Reason'] = 'CloudFormation Delete Request';",
+        "    sendResponse(event, context, responseStatus, responseData);",
+        "    return;",
+        "  }",
+        "  var https = require('https');",
+        "  var options = {",
+        "    hostname: 'random-word-api.herokuapp.com',",
+        "    port: 443,",
+        "    path: '\/word?number=1',",
+        "    method: 'GET'",
+        "  };",
+        "  console.log('External API Call Attempt for Random Word:\\n' + JSON.stringify(options));",
+        "  var request = https.request(options, function(response) {",
+        "    console.log('External API Call Attempt Status Code: ' + response.statusCode);",
+        "    console.log('External API Call Attempt Response Headers: ' + JSON.stringify(response.headers));",
+        "    responseData['SystemInput'] = event.ResourceProperties.SystemInput;",
+        "    responseData['UserInput'] = event.ResourceProperties.UserInput;",
+        "    if (response.statusCode == '200') {",
+        "      var body = '';",
+        "      response.on('data', function(chunk) {",
+        "        body += chunk;",
+        "      });",
+        "      response.on('end', function() {",
+        "        console.log(body);",
+        "        var resultRandomWord = body.substring( ( body.indexOf('\\\"') + 1 ), body.lastIndexOf('\\\"') );",
+        "        responseStatus = 'SUCCESS';",
+        "        responseData['Reason'] = 'Call to Generate Random Word';",
+        "        responseData['Result'] = resultRandomWord;",
+        "        sendResponse(event, context, responseStatus, responseData);",
+        "      });",
+        "    } else {",
+        "      responseData['Reason'] = 'External API Call Attempt Status Code: ' + response.statusCode;",
+        "      sendResponse(event, context, responseStatus, responseData);",
+        "    }",
+        "  });",
+        "  request.on('error', function(error) {",
+        "    console.log('External API Call Error:\\n' + error);",
+        "    responseData['Reason'] = 'External API Call Error: ' + error;",
+        "    sendResponse(event, context, responseStatus, responseData);",
+        "  });",
+        "  request.end();",
+        "};",
+        "function sendResponse(event, context, responseStatus, responseData) {",
+        "  var responseBody = JSON.stringify({",
+        "    Status: responseStatus,",
+        "    Reason: 'Refer the Reason\\'s Details at CloudWatch Log Stream: ' + context.logStreamName,",
+        "    PhysicalResourceId: context.logStreamName,",
+        "    StackId: event.StackId,",
+        "    RequestId: event.RequestId,",
+        "    LogicalResourceId: event.LogicalResourceId,",
+        "    Data: responseData",
+        "  });",
+        "  console.log('Composed Response Body:\\n', responseBody);",
+        "  var https = require('https');",
+        "  var url = require('url');",
+        "  var parsedUrl = url.parse(event.ResponseURL);",
+        "  var options = {",
+        "    hostname: parsedUrl.hostname,",
+        "    port: 443,",
+        "    path: parsedUrl.path,",
+        "    method: 'PUT',",
+        "    headers: {",
+        "      'content-type': '',",
+        "      'content-length': responseBody.length",
+        "    }",
+        "  };",
+        "  console.log('Sending Response . . .\\n');",
+        "  var request = https.request(options, function(response) {",
+        "    console.log('Status Code: ' + response.statusCode);",
+        "    console.log('Headers: ' + JSON.stringify(response.headers));",
+        "    context.done();",
+        "  });",
+        "  request.on('error', function(error) {",
+        "    console.log('sendResponse Error:\\n' + error);",
+        "    context.done();",
+        "  });",
+        "  request.write(responseBody);",
+        "  request.end();",
+        "};"
+       ]
+      ]
+     }
+    },
+    "Handler": "index.handler",
+    "Runtime": "nodejs14.x",
+    "Timeout": "333",
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRole",
+      "Arn"
+     ]
+    },
+    "VpcConfig": {
+     "SecurityGroupIds" : [ { "Ref": "NodesSecurityGroup" } ],
+     "SubnetIds" : [ { "Ref": "NodesSubnet" } ]
+    },
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "RandomWordFunction" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  }
+ },
+ "Outputs": {
+  "RandomWordFunction": {
+   "Value": { "Ref": "RandomWordFunction" },
+   "Description": "Look at \"CloudWatch > Log Groups > /aws/lambda/[this-value-reference]\" for the logs of this Lambda Function"
+  },
+  "SystemInput": {
+   "Value": { "Fn::GetAtt": [ "RandomWordInterface", "SystemInput" ] },
+   "Description": "One of the inputs into the Lambda Function (labelled as \"SystemInput\", value is AWS Region)"
+  },
+  "UserInput": {
+   "Value": { "Fn::GetAtt": [ "RandomWordInterface", "UserInput" ] },
+   "Description": "One of the inputs into the Lambda Function (labelled as \"UserInput\")"
+  },
+  "Reason": {
+   "Value": { "Fn::GetAtt": [ "RandomWordInterface", "Reason" ] },
+   "Description": "One of the results of the Lambda Function (labelled as \"Reason\")"
+  },
+  "Result": {
+   "Value": { "Fn::GetAtt": [ "RandomWordInterface", "Result" ] },
+   "Description": "The other result of the Lambda Function (labelled as \"Result\")"
+  }
+ }
+}
