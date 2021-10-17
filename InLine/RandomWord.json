@@ -93,7 +93,7 @@
       "Arn"
      ]
     },
-    "LogGroupName": "FlowLogGroup",
+    "LogGroupName": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "FlowLog" ] ] },
     "ResourceId": {
      "Ref": "VPC"
     },
