@@ -16,7 +16,8 @@ This Repository covers only the Skeleton of how to :
 - [ ] Transfer information/output from Lambda to CloudFormation,
 - [ ] Glue both CloudFormation and Lambda together,
 - [ ] Using only NodeJS as the language at the Lambda Function,
-- [ ] Call External API Service (example: on the Internet).
+- [ ] Call External API Service (example: on the Internet),
+- [ ] Review the system's information passed from CloudFormation to Lambda Function.
 
 <br>
 
