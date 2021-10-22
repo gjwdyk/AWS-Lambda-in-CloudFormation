@@ -599,9 +599,6 @@ And lastly, below is a Lambda sample response back to CloudFormation, when recei
 
 [EventContextInformation.js](EventContextInformation.js) and [EventContextInformation.js](EventContextInformation.js) examples describe information which are passed to Lambda Function during the call, which can be used within the Lambda Function itself, or to be passed out to CloudFormation Stack, since some of these information are not available to the CloudFormation Template.
 
-
-
-
 | Information | Description | Reference Syntax |
 | --- | --- | --- |
 | AWS Region | AWS Region where the CloudFormation Stack is running | `{ "Fn::Select" : [ "3", { "Fn::GetAtt": [ "EventContextInterface", "ServiceToken" ] } ] }` , `{ "Fn::Select" : [ "3", { "Fn::GetAtt": [ "EventContextInterface", "StackId" ] } ] }` |
@@ -616,12 +613,7 @@ And lastly, below is a Lambda sample response back to CloudFormation, when recei
 | Context's Request ID | Context's Request ID | `{ "Fn::GetAtt": [ "EventContextInterface", "ContextRequestID" ] }` |
 | Lambda Function | Reference to the Lambda Function | `{ "Ref": "EventContextFunction" }` |
 
-
-
-
-
-
-
+![CloudFormation Outputs EventContext Information](CloudFormationOutputsEventContextInformation.png)
 
 
 
