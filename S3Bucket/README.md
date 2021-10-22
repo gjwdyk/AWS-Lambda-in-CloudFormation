@@ -520,7 +520,7 @@ which resulted due to the `setTimeout` function.
 
 ***
 
-## Node.JS CallBack Function
+## NodeJS CallBack Function
 
 [RandomWordCB.js](RandomWordCB.js) example (and its companion [RandomWordCB.json](RandomWordCB.json)) arranges the code so that the function call to return the resulting random word were inserted within the External API Call Back Function, thus ensuring in that position and time an answer / result is available.
 [RandomWordCB.js](RandomWordCB.js) example also cater the probability that the External API may return `Status Code` other than `200` .
