@@ -597,7 +597,7 @@ And lastly, below is a Lambda sample response back to CloudFormation, when recei
 
 ## System's Information (Event and Context)
 
-[EventContextInformation.js](EventContextInformation.js) and [EventContextInformation.js](EventContextInformation.js) examples describe information which are passed to Lambda Function during the call, which can be used within the Lambda Function itself, or to be passed out to CloudFormation Stack, since some of these information are not available to the CloudFormation Template.
+[EventContextInformation.js](EventContextInformation.js) and [EventContextInformation.json](EventContextInformation.json) examples describe information which are passed to Lambda Function during the call, which can be used within the Lambda Function itself, or to be passed out to CloudFormation Stack, since some of these information are not available to the CloudFormation Template.
 
 | Information | Description | Reference Syntax |
 | --- | --- | --- |
