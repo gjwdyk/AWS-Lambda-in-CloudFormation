@@ -1,0 +1,235 @@
+{
+ "AWSTemplateFormatVersion": "2010-09-09",
+ "Description": "Lambda Function creation within CloudFormation Template",
+ "Parameters": {
+  "TagPreFix": {
+   "Type": "String",
+   "Default": "CF",
+   "AllowedPattern": "^[a-zA-Z][0-9a-zA-Z]*$",
+   "ConstraintDescription": "Kindly check the TagPreFix parameter input. Only Alphanumeric characters allowed.",
+   "Description": "Prefix to be given to all possible resources created by this stack-template."
+  },
+  "TagOwnerEmail": {
+   "Type": "String",
+   "Default": "john.doe@domain.tld",
+   "AllowedPattern": "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$",
+   "ConstraintDescription": "Kindly check the TagOwner parameter input to follow valid email address convention.",
+   "Description": "Tag which will be attached to all possible resources created by this stack-template."
+  }
+ },
+ "Metadata": {
+  "AWS::CloudFormation::Interface": {
+   "ParameterGroups": [
+    {
+     "Label": {
+      "default": "CloudFormation Stack Tag Parameters"
+     },
+     "Parameters": [
+      "TagPreFix",
+      "TagOwnerEmail"
+     ]
+    }
+   ],
+   "ParameterLabels": {
+    "TagPreFix": {
+     "default": "PreFix for Name Tags"
+    },
+    "TagOwnerEmail": {
+     "default": "Email Address of the Owner of all resources created by this CloudFormation Stack"
+    }
+   }
+  }
+ },
+ "Resources": {
+  "LambdaExecutionRole": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Effect": "Allow",
+       "Principal": {
+        "Service": [
+         "lambda.amazonaws.com"
+        ]
+       },
+       "Action": [
+        "sts:AssumeRole"
+       ]
+      }
+     ]
+    },
+    "Policies": [
+     {
+      "PolicyName": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "LambdaExecutionPolicy" ] ] },
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+         ],
+         "Resource": "arn:aws:logs:*:*:*"
+        }
+       ]
+      }
+     }
+    ],
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "LambdaExecutionRole" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  },
+  "EventContextInterface": {
+   "Type": "Custom::EventContextInterface",
+   "DependsOn": [ "LambdaExecutionRole", "EventContextFunction" ],
+   "Properties": {
+    "ServiceToken": { "Fn::GetAtt" : ["EventContextFunction", "Arn"] },
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "EventContextInterface" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  },
+  "EventContextFunction": {
+   "Type": "AWS::Lambda::Function",
+   "DependsOn": [ "LambdaExecutionRole" ],
+   "Properties": {
+    "Code": {
+     "ZipFile": {
+      "Fn::Join": [
+       "\n",
+       [
+        "exports.handler = function(event, context) {",
+        "  var responseData = {};",
+        "  var responseStatus = 'FAILED';",
+        "  console.log('Request Event:\\n' + JSON.stringify(event));",
+        "  console.log('Request Context:\\n' + JSON.stringify(context));",
+        "  if (event.RequestType == 'Delete') {",
+        "    responseStatus = 'SUCCESS';",
+        "    responseData['Reason'] = 'CloudFormation Delete Request';",
+        "    sendResponse(event, context, responseStatus, responseData);",
+        "    return;",
+        "  }",
+        "  responseStatus = 'SUCCESS';",
+        "  responseData['ServiceToken'] = (event.ServiceToken).split(':');",
+        "  responseData['StackId'] = (event.StackId).split(':');",
+        "  responseData['FunctionName'] = (responseData['ServiceToken'][6]).split('-');",
+        "  //responseData['FunctionName'] = (context.functionName).split('-');",
+        "  responseData['StackName'] = (responseData['StackId'][5]).split('/');",
+        "  responseData['EventRequestID'] = event.RequestId;",
+        "  responseData['ContextRequestID'] = context.awsRequestId;",
+        "  sendResponse(event, context, responseStatus, responseData);",
+        "};",
+        "function sendResponse(event, context, responseStatus, responseData) {",
+        "  var responseBody = JSON.stringify({",
+        "    Status: responseStatus,",
+        "    Reason: 'Refer the Reason\\'s Details at CloudWatch Log Stream: ' + context.logStreamName,",
+        "    PhysicalResourceId: context.logStreamName,",
+        "    StackId: event.StackId,",
+        "    RequestId: event.RequestId,",
+        "    LogicalResourceId: event.LogicalResourceId,",
+        "    Data: responseData",
+        "  });",
+        "  console.log('Composed Response Body:\\n', responseBody);",
+        "  var https = require('https');",
+        "  var url = require('url');",
+        "  var parsedUrl = url.parse(event.ResponseURL);",
+        "  var options = {",
+        "    hostname: parsedUrl.hostname,",
+        "    port: 443,",
+        "    path: parsedUrl.path,",
+        "    method: 'PUT',",
+        "    headers: {",
+        "      'content-type': '',",
+        "      'content-length': responseBody.length",
+        "    }",
+        "  };",
+        "  console.log('Sending Response . . .\\n');",
+        "  var request = https.request(options, function(response) {",
+        "    console.log('Status Code: ' + response.statusCode);",
+        "    console.log('Headers: ' + JSON.stringify(response.headers));",
+        "    context.done();",
+        "  });",
+        "  request.on('error', function(error) {",
+        "    console.log('sendResponse Error:\\n' + error);",
+        "    context.done();",
+        "  });",
+        "  request.write(responseBody);",
+        "  request.end();",
+        "}"
+       ]
+      ]
+     }
+    },
+    "Handler": "index.handler",
+    "Runtime": "nodejs14.x",
+    "Timeout": "333",
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRole",
+      "Arn"
+     ]
+    },
+    "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ "_", [ { "Ref": "TagPreFix" }, { "Ref": "AWS::StackName" }, "EventContextFunction" ] ] } }, { "Key": "Owner", "Value": { "Ref": "TagOwnerEmail" } } ]
+   }
+  }
+ },
+ "Outputs": {
+  "LambdaFunction": {
+   "Value": { "Ref": "EventContextFunction" },
+   "Description": "Look at \"CloudWatch > Log Groups > /aws/lambda/[this-value-reference]\" for the logs of this Lambda Function"
+  },
+  "ServiceToken3": {
+   "Value": { "Fn::Select" : [ "3", { "Fn::GetAtt": [ "EventContextInterface", "ServiceToken" ] } ] },
+   "Description": "One of the results of the Lambda Function (labelled as \"ServiceToken3\"), value is AWS Region"
+  },
+  "ServiceToken4": {
+   "Value": { "Fn::Select" : [ "4", { "Fn::GetAtt": [ "EventContextInterface", "ServiceToken" ] } ] },
+   "Description": "One of the results of the Lambda Function (labelled as \"ServiceToken4\"), value is AWS Account Number"
+  },
+  "ServiceToken6": {
+   "Value": { "Fn::Select" : [ "6", { "Fn::GetAtt": [ "EventContextInterface", "ServiceToken" ] } ] },
+   "Description": "One of the results of the Lambda Function (labelled as \"ServiceToken6\"), value is Lambda Function Name-ID"
+  },
+  "StackId3": {
+   "Value": { "Fn::Select" : [ "3", { "Fn::GetAtt": [ "EventContextInterface", "StackId" ] } ] },
+   "Description": "One of the results of the Lambda Function (labelled as \"StackId3\"), value is AWS Region."
+  },
+  "StackId4": {
+   "Value": { "Fn::Select" : [ "4", { "Fn::GetAtt": [ "EventContextInterface", "StackId" ] } ] },
+   "Description": "One of the results of the Lambda Function (labelled as \"StackId4\"), value is AWS Account Number"
+  },
+  "StackId5": {
+   "Value": { "Fn::Select" : [ "5", { "Fn::GetAtt": [ "EventContextInterface", "StackId" ] } ] },
+   "Description": "One of the results of the Lambda Function (labelled as \"StackId5\"), value is CloudFormation Stack Name/ID"
+  },
+  "StackName1": {
+   "Value": { "Fn::Select" : [ "1", { "Fn::GetAtt": [ "EventContextInterface", "StackName" ] } ] },
+   "Description": "One of the results of the Lambda Function (labelled as \"StackName1\"), value is CloudFormation Stack Name"
+  },
+  "StackName2": {
+   "Value": { "Fn::Select" : [ "2", { "Fn::GetAtt": [ "EventContextInterface", "StackName" ] } ] },
+   "Description": "One of the results of the Lambda Function (labelled as \"StackName2\"), value is CloudFormation Stack ID"
+  },
+  "FunctionName0": {
+   "Value": { "Fn::Select" : [ "0", { "Fn::GetAtt": [ "EventContextInterface", "FunctionName" ] } ] },
+   "Description": "One of the results of the Lambda Function (labelled as \"FunctionName0\"), value is CloudFormation Stack Name"
+  },
+  "FunctionName1": {
+   "Value": { "Fn::Select" : [ "1", { "Fn::GetAtt": [ "EventContextInterface", "FunctionName" ] } ] },
+   "Description": "One of the results of the Lambda Function (labelled as \"FunctionName1\"), value is Lambda Function Name"
+  },
+  "FunctionName2": {
+   "Value": { "Fn::Select" : [ "2", { "Fn::GetAtt": [ "EventContextInterface", "FunctionName" ] } ] },
+   "Description": "One of the results of the Lambda Function (labelled as \"FunctionName2\"), value is Lambda Function ID"
+  },
+  "EventRequestID": {
+   "Value": { "Fn::GetAtt": [ "EventContextInterface", "EventRequestID" ] },
+   "Description": "One of the results of the Lambda Function (labelled as \"EventRequestID\"), value is Event's Request ID"
+  },
+  "ContextRequestID": {
+   "Value": { "Fn::GetAtt": [ "EventContextInterface", "ContextRequestID" ] },
+   "Description": "One of the results of the Lambda Function (labelled as \"ContextRequestID\"), value is Context's Request ID"
+  }
+ }
+}
