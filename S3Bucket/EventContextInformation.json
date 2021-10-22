@@ -147,7 +147,7 @@
  "Outputs": {
   "LambdaFunction": {
    "Value": { "Ref": "EventContextFunction" },
-   "Description": { "Fn::Join": [ "", [ "Look at \"CloudWatch > Log Groups > /aws/lambda/", { "Ref": "EventContextFunction" }, "\" for the logs of this Lambda Function" ] ] }
+   "Description": "Look at \"CloudWatch > Log Groups > /aws/lambda/[this-value-reference]\" for the logs of this Lambda Function"
   },
   "ServiceToken3": {
    "Value": { "Fn::Select" : [ "3", { "Fn::GetAtt": [ "EventContextInterface", "ServiceToken" ] } ] },
