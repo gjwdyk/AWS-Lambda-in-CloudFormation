@@ -271,6 +271,15 @@ Kindly refer to [Node.JS CallBack Function](../S3Bucket#nodejs-callback-function
 
 ***
 
+## System's Information (Event and Context)
+
+[EventContextInformation.json](EventContextInformation.json) contains an example code identical to the example on [System's Information (Event and Context)](../S3Bucket#systems-information-event-and-context) section, with a slight difference that [EventContextInformation.json](EventContextInformation.json) has the Lambda Function InLine within the CloudFormation Template.
+Kindly refer to [System's Information (Event and Context)](../S3Bucket#systems-information-event-and-context) section for more detail explanations on the example.
+
+
+
+***
+
 <br><br><br>
 ```
 ╔═╦═════════════════╦═╗
