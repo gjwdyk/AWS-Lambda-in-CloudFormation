@@ -595,6 +595,38 @@ And lastly, below is a Lambda sample response back to CloudFormation, when recei
 
 ***
 
+## System's Information (Event and Context)
+
+[EventContextInformation.js](EventContextInformation.js) and [EventContextInformation.js](EventContextInformation.js) examples describe information which are passed to Lambda Function during the call, which can be used within the Lambda Function itself, or to be passed out to CloudFormation Stack, since some of these information are not available to the CloudFormation Template.
+
+
+
+
+| Information | Description | Reference Syntax |
+| --- | --- | --- |
+| AWS Region | AWS Region where the CloudFormation Stack is running | `{ "Fn::Select" : [ "3", { "Fn::GetAtt": [ "EventContextInterface", "ServiceToken" ] } ] }` , `{ "Fn::Select" : [ "3", { "Fn::GetAtt": [ "EventContextInterface", "StackId" ] } ] }` |
+| AWS Account Number | AWS Account Number on which the CloudFormation Stack is running | `{ "Fn::Select" : [ "4", { "Fn::GetAtt": [ "EventContextInterface", "ServiceToken" ] } ] }` , `{ "Fn::Select" : [ "4", { "Fn::GetAtt": [ "EventContextInterface", "StackId" ] } ] }` |
+| CloudFormation Stack Name and ID | CloudFormation Stack Name and ID | `{ "Fn::Select" : [ "5", { "Fn::GetAtt": [ "EventContextInterface", "StackId" ] } ] }` |
+| CloudFormation Stack Name | CloudFormation Stack Name | `{ "Fn::Select" : [ "1", { "Fn::GetAtt": [ "EventContextInterface", "StackName" ] } ] }` , `{ "Fn::Select" : [ "0", { "Fn::GetAtt": [ "EventContextInterface", "FunctionName" ] } ] }` |
+| CloudFormation Stack ID | CloudFormation Stack ID | `{ "Fn::Select" : [ "2", { "Fn::GetAtt": [ "EventContextInterface", "StackName" ] } ] }` |
+| Lambda Function Name and ID | Lambda Function Name and ID | `{ "Fn::Select" : [ "6", { "Fn::GetAtt": [ "EventContextInterface", "ServiceToken" ] } ] }` |
+| Lambda Function Name | Lambda Function Name | `{ "Fn::Select" : [ "1", { "Fn::GetAtt": [ "EventContextInterface", "FunctionName" ] } ] }` |
+| Lambda Function ID | Lambda Function ID | `{ "Fn::Select" : [ "2", { "Fn::GetAtt": [ "EventContextInterface", "FunctionName" ] } ] }` |
+| Event's Request ID | Event's Request ID | `{ "Fn::GetAtt": [ "EventContextInterface", "EventRequestID" ] }` |
+| Context's Request ID | Context's Request ID | `{ "Fn::GetAtt": [ "EventContextInterface", "ContextRequestID" ] }` |
+| Lambda Function | Reference to the Lambda Function | `{ "Ref": "EventContextFunction" }` |
+
+
+
+
+
+
+
+
+
+
+***
+
 <br><br><br>
 ```
 ╔═╦═════════════════╦═╗
